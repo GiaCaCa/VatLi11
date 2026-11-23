@@ -1,0 +1,2115 @@
+<!DOCTYPE html>
+<html lang="vi" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PHYSICA 11 · Cẩm Nang Vật Lí 11 Chuyên Sâu HSG</title>
+
+  <!-- Font Be Vietnam Pro (Google Fonts) hỗ trợ đầy đủ dấu tiếng Việt -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet" />
+
+  <!-- Thư viện KaTeX từ cdnjs -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css" />
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+
+  <style>
+    /* =====================================================================
+       B1. HỆ THỐNG BIẾN MÀU SẮC (NAVY ĐẬM, CYAN, TÍM, VÀNG CAM NÂNG CAO)
+       ===================================================================== */
+    :root {
+      --bg: #f4f7fb;
+      --surface: rgba(255, 255, 255, 0.88);
+      --surface-solid: #ffffff;
+      --surface-2: rgba(241, 245, 249, 0.92);
+      --text: #0f172a;
+      --text-muted: #475569;
+      --border: rgba(148, 163, 184, 0.35);
+      --primary: #0284c7;
+      --accent: #7c3aed;
+      --primary-soft: rgba(2, 132, 199, 0.12);
+      --adv-bg: rgba(254, 243, 199, 0.78);
+      --adv-border: #d97706;
+      --adv-text: #92400e;
+      --sup-bg: rgba(243, 232, 255, 0.9);
+      --sup-text: #6b21a8;
+      --warn-bg: rgba(254, 226, 226, 0.78);
+      --warn-border: #dc2626;
+      --ok-bg: rgba(209, 250, 229, 0.85);
+      --ok-border: #059669;
+      --shadow: 0 8px 28px rgba(15, 23, 42, 0.08);
+      --sidebar-w: 285px;
+    }
+
+    [data-theme="dark"] {
+      --bg: #060b18;
+      --surface: rgba(15, 23, 42, 0.78);
+      --surface-solid: #0f172a;
+      --surface-2: rgba(30, 41, 59, 0.76);
+      --text: #f1f5f9;
+      --text-muted: #94a3b8;
+      --border: rgba(56, 189, 248, 0.2);
+      --primary: #38bdf8;
+      --accent: #a78bfa;
+      --primary-soft: rgba(56, 189, 248, 0.14);
+      --adv-bg: rgba(245, 158, 11, 0.12);
+      --adv-border: #f59e0b;
+      --adv-text: #fcd34d;
+      --sup-bg: rgba(167, 139, 250, 0.18);
+      --sup-text: #ddd6fe;
+      --warn-bg: rgba(239, 68, 68, 0.13);
+      --warn-border: #f87171;
+      --ok-bg: rgba(16, 185, 129, 0.16);
+      --ok-border: #34d399;
+      --shadow: 0 8px 32px rgba(0, 0, 0, 0.45);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Be Vietnam Pro', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.65;
+      min-height: 100vh;
+      overflow-x: hidden;
+      transition: background 0.25s, color 0.25s;
+    }
+
+    /* Nền Canvas Vật lí cố định phía sau */
+    #physics-canvas {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* Thanh tiến độ đọc trên cùng */
+    #progress-bar {
+      position: fixed; top: 0; left: 0; height: 3px; width: 0%;
+      background: linear-gradient(90deg, var(--primary), var(--accent), var(--adv-border));
+      z-index: 1000;
+    }
+
+    /* Header trên điện thoại */
+    .mobile-header {
+      display: none; position: sticky; top: 0; z-index: 250;
+      background: var(--surface); backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+      padding: 10px 14px; align-items: center; justify-content: space-between;
+    }
+
+    .icon-btn {
+      background: var(--surface-2); color: var(--text);
+      border: 1px solid var(--border); border-radius: 10px;
+      padding: 7px 12px; cursor: pointer; font-family: inherit;
+      font-weight: 600; font-size: 0.88rem; transition: 0.2s;
+    }
+    .icon-btn:hover { border-color: var(--primary); color: var(--primary); }
+
+    /* Bố cục 2 cột */
+    .layout { position: relative; z-index: 1; display: flex; min-height: 100vh; }
+
+    /* Sidebar trái cố định */
+    .sidebar {
+      width: var(--sidebar-w); position: fixed; top: 0; left: 0; bottom: 0;
+      background: var(--surface); backdrop-filter: blur(16px);
+      border-right: 1px solid var(--border); padding: 20px 14px;
+      overflow-y: auto; z-index: 300; display: flex; flex-direction: column; gap: 14px;
+      transition: transform 0.25s ease;
+    }
+    .brand { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+    .brand-title {
+      font-size: 1.18rem; font-weight: 700;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .brand-sub { font-size: 0.76rem; color: var(--text-muted); }
+
+    .search-box {
+      width: 100%; padding: 9px 12px; border-radius: 10px;
+      border: 1px solid var(--border); background: var(--surface-2);
+      color: var(--text); font-family: inherit; font-size: 0.88rem;
+    }
+    .search-box:focus { outline: 2px solid var(--primary); border-color: transparent; }
+
+    .nav-tabs { display: grid; gap: 6px; }
+    .nav-tab {
+      text-align: left; padding: 9px 12px; border-radius: 10px; border: 1px solid transparent;
+      background: transparent; color: var(--text); font-family: inherit;
+      font-weight: 600; font-size: 0.9rem; cursor: pointer; transition: 0.2s;
+    }
+    .nav-tab:hover { background: var(--surface-2); }
+    .nav-tab.active {
+      background: var(--primary-soft); color: var(--primary);
+      border-color: var(--border);
+    }
+
+    .toc-title {
+      font-size: 0.74rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.06em; color: var(--text-muted); margin-top: 4px;
+    }
+    .toc-list { list-style: none; display: flex; flex-direction: column; gap: 4px; }
+    .toc-link {
+      display: block; padding: 7px 10px; border-radius: 8px; text-decoration: none;
+      color: var(--text-muted); font-size: 0.85rem; border-left: 3px solid transparent;
+      transition: 0.2s;
+    }
+    .toc-link:hover { background: var(--surface-2); color: var(--text); }
+    .toc-link.active {
+      color: var(--primary); background: var(--primary-soft);
+      border-left-color: var(--primary); font-weight: 600;
+    }
+    .toc-group { margin-bottom: 6px; }
+    .toc-ch-head {
+      font-size: 0.82rem; font-weight: 700; color: var(--text);
+      padding: 6px 8px 3px; display: block; text-decoration: none;
+    }
+    .toc-ch-head:hover { color: var(--primary); }
+    .toc-sublist {
+      list-style: none; padding-left: 10px; border-left: 1px dashed var(--border);
+      margin-left: 8px; display: flex; flex-direction: column; gap: 2px;
+    }
+    .toc-sublink {
+      display: block; padding: 4px 8px; border-radius: 6px; text-decoration: none;
+      color: var(--text-muted); font-size: 0.79rem; transition: 0.15s;
+    }
+    .toc-sublink:hover { background: var(--surface-2); color: var(--text); }
+    .toc-sublink.active { color: var(--primary); background: var(--primary-soft); font-weight: 600; }
+
+    /* Nội dung chính */
+    .main {
+      margin-left: var(--sidebar-w); flex: 1; padding: 28px 36px 90px;
+      max-width: 1080px; width: 100%;
+    }
+    .hero {
+      background: linear-gradient(135deg, rgba(2, 132, 199, 0.9), rgba(124, 58, 237, 0.88));
+      color: #fff; padding: 26px 30px; border-radius: 18px;
+      margin-bottom: 22px; box-shadow: var(--shadow); backdrop-filter: blur(8px);
+    }
+    .hero h1 { font-size: 1.65rem; line-height: 1.3; margin-bottom: 8px; }
+    .hero p { font-size: 0.94rem; opacity: 0.94; }
+
+    .view-section { display: none; }
+    .view-section.active { display: block; }
+
+    .toolbar {
+      display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px;
+      align-items: center; justify-content: space-between;
+    }
+
+    /* Thẻ glassmorphism chung */
+    .glass-card {
+      background: var(--surface); backdrop-filter: blur(14px);
+      border: 1px solid var(--border); border-radius: 16px;
+      box-shadow: var(--shadow); margin-bottom: 18px; overflow: hidden;
+    }
+
+    /* Accordion Chương */
+    .chapter-header {
+      width: 100%; background: transparent; border: none; color: var(--text);
+      padding: 18px 22px; display: flex; align-items: center; justify-content: space-between;
+      cursor: pointer; text-align: left; font-family: inherit;
+    }
+    .chapter-header:hover { background: var(--surface-2); }
+    .chapter-title { font-size: 1.12rem; font-weight: 700; }
+    .chapter-meta { font-size: 0.82rem; color: var(--text-muted); margin-top: 2px; }
+    .chevron { font-size: 1rem; color: var(--primary); transition: transform 0.25s; }
+    .glass-card.open .chevron { transform: rotate(180deg); }
+    .chapter-body { display: none; padding: 0 22px 22px; border-top: 1px solid var(--border); }
+    .glass-card.open .chapter-body { display: block; }
+
+    /* Thẻ từng Bài học tách riêng bên trong mỗi Chương */
+    .lessons-stack { display: flex; flex-direction: column; gap: 12px; margin-top: 14px; }
+    .lesson-card {
+      background: var(--surface-2); border: 1px solid var(--border);
+      border-radius: 13px; overflow: hidden; transition: border-color 0.2s;
+    }
+    .lesson-card.open { border-color: var(--primary); }
+    .lesson-header {
+      width: 100%; background: transparent; border: none; color: var(--text);
+      padding: 13px 16px; display: flex; align-items: center; justify-content: space-between;
+      gap: 10px; cursor: pointer; text-align: left; font-family: inherit;
+    }
+    .lesson-header:hover { background: var(--primary-soft); }
+    .lesson-title { font-size: 0.96rem; font-weight: 700; color: var(--text); }
+    .lesson-meta { font-size: 0.78rem; color: var(--text-muted); margin-top: 2px; }
+    .lesson-chevron { font-size: 0.85rem; color: var(--primary); transition: transform 0.2s; }
+    .lesson-card.open .lesson-chevron { transform: rotate(180deg); }
+    .lesson-body {
+      display: none; padding: 4px 16px 16px; border-top: 1px dashed var(--border);
+      background: var(--surface);
+    }
+    .lesson-card.open .lesson-body { display: block; }
+
+    .sec-h {
+      font-size: 0.95rem; font-weight: 700; color: var(--primary);
+      margin: 16px 0 8px; padding-bottom: 4px; border-bottom: 1px dashed var(--border);
+    }
+    .idea-box {
+      background: var(--primary-soft); border-left: 4px solid var(--primary);
+      padding: 12px 15px; border-radius: 0 10px 10px 0; font-size: 0.93rem;
+    }
+
+    /* Thẻ Khái niệm */
+    .concept-grid { display: grid; gap: 12px; }
+    .concept-card {
+      background: var(--surface-2); border: 1px solid var(--border);
+      border-radius: 12px; padding: 14px 16px; font-size: 0.9rem;
+    }
+    .concept-head { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-bottom: 8px; }
+    .concept-name { font-weight: 700; font-size: 0.96rem; color: var(--text); }
+    .badge {
+      font-size: 0.72rem; font-weight: 700; padding: 2px 8px; border-radius: 999px;
+      display: inline-flex; align-items: center;
+    }
+    .b-cyan { background: var(--primary-soft); color: var(--primary); }
+    .b-violet { background: var(--sup-bg); color: var(--sup-text); }
+    .b-adv { background: var(--adv-border); color: #fff; }
+    .b-level { background: rgba(148, 163, 184, 0.22); color: var(--text); }
+
+    .concept-meta { display: grid; gap: 4px; color: var(--text-muted); font-size: 0.87rem; }
+    .concept-meta strong { color: var(--text); }
+
+    /* Thẻ Công thức */
+    .formula-card {
+      background: var(--surface-2); border: 1px solid var(--border);
+      border-radius: 12px; padding: 14px 16px; margin-bottom: 12px; overflow-x: auto;
+    }
+    .formula-card.advanced {
+      background: var(--adv-bg); border: 1px solid var(--adv-border);
+      border-left: 4px solid var(--adv-border);
+    }
+    .formula-top {
+      display: flex; flex-wrap: wrap; align-items: center; gap: 8px;
+      justify-content: space-between; margin-bottom: 8px;
+    }
+    .formula-name { font-weight: 700; font-size: 0.94rem; }
+    .copy-btn {
+      background: var(--surface); color: var(--text); border: 1px solid var(--border);
+      border-radius: 8px; padding: 4px 10px; font-size: 0.78rem; font-weight: 600;
+      cursor: pointer; font-family: inherit;
+    }
+    .copy-btn:hover { border-color: var(--primary); color: var(--primary); }
+    .formula-math { margin: 8px 0; font-size: 1.02rem; }
+    .formula-details { font-size: 0.86rem; color: var(--text-muted); display: grid; gap: 4px; }
+    .formula-card.advanced .formula-details { color: var(--adv-text); }
+
+    /* Bảng dữ liệu */
+    .data-table-wrap { overflow-x: auto; margin: 10px 0; }
+    table.data-table {
+      width: 100%; border-collapse: collapse; font-size: 0.85rem;
+      background: var(--surface); border-radius: 10px; overflow: hidden;
+    }
+    table.data-table th, table.data-table td {
+      padding: 8px 10px; border: 1px solid var(--border); text-align: left;
+    }
+    table.data-table th { background: var(--primary-soft); color: var(--primary); font-weight: 700; }
+
+    /* Thẻ Ví dụ */
+    .example-card {
+      background: var(--surface-2); border: 1px solid var(--border);
+      border-radius: 12px; padding: 14px 16px; margin-bottom: 12px; font-size: 0.9rem;
+    }
+    .example-sol {
+      display: none; margin-top: 12px; padding-top: 12px;
+      border-top: 1px dashed var(--border); font-size: 0.88rem;
+    }
+    .example-sol.show { display: block; }
+    .btn-primary {
+      background: var(--primary); color: #fff; border: none; border-radius: 9px;
+      padding: 7px 14px; font-family: inherit; font-weight: 600; font-size: 0.85rem;
+      cursor: pointer; transition: opacity 0.2s;
+    }
+    .btn-primary:hover { opacity: 0.9; }
+
+    /* Hộp Lỗi thường gặp & Tóm lại */
+    .warn-box {
+      background: var(--warn-bg); border: 1px solid var(--warn-border);
+      border-left: 4px solid var(--warn-border); border-radius: 12px;
+      padding: 12px 16px; font-size: 0.89rem;
+    }
+    .warn-box ul { padding-left: 18px; display: grid; gap: 5px; }
+    .summary-box {
+      margin-top: 14px; padding: 12px 16px; border-radius: 12px;
+      background: linear-gradient(90deg, var(--primary-soft), var(--sup-bg));
+      border: 1px solid var(--border); font-weight: 600; font-style: italic; font-size: 0.92rem;
+    }
+
+    /* Sơ đồ liên kết chương */
+    .flow-wrap { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 10px; margin-top: 14px; }
+    .flow-node {
+      background: var(--surface-2); border: 2px solid var(--primary); border-radius: 12px;
+      padding: 10px 14px; text-align: center; min-width: 170px; font-weight: 700; font-size: 0.88rem;
+    }
+    .flow-node span { display: block; font-size: 0.76rem; font-weight: 400; color: var(--text-muted); margin-top: 3px; }
+    .flow-arrow { font-size: 1.25rem; color: var(--primary); font-weight: 700; }
+
+    /* Bộ lọc & Bộ đổi đơn vị */
+    .filter-bar {
+      display: flex; flex-wrap: wrap; gap: 10px; align-items: center;
+      padding: 14px; margin-bottom: 16px;
+    }
+    .select-ui, .input-ui {
+      padding: 8px 12px; border-radius: 10px; border: 1px solid var(--border);
+      background: var(--surface-2); color: var(--text); font-family: inherit; font-size: 0.88rem;
+    }
+    .pill {
+      padding: 7px 14px; border-radius: 999px; border: 1px solid var(--border);
+      background: var(--surface-2); color: var(--text); font-family: inherit;
+      font-size: 0.85rem; font-weight: 600; cursor: pointer;
+    }
+    .pill.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+
+    .converter-box {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 10px; padding: 16px; align-items: end;
+    }
+    .conv-result {
+      padding: 10px 14px; border-radius: 10px; background: var(--primary-soft);
+      color: var(--primary); font-weight: 700; font-size: 0.98rem;
+    }
+
+    /* Trắc nghiệm tương tác */
+    .quiz-item { padding: 18px 20px; }
+    .quiz-q { font-weight: 600; font-size: 0.95rem; margin-bottom: 12px; }
+    .quiz-opts { display: grid; gap: 8px; }
+    .quiz-opt {
+      text-align: left; width: 100%; padding: 10px 14px; border-radius: 10px;
+      border: 1px solid var(--border); background: var(--surface-2); color: var(--text);
+      font-family: inherit; font-size: 0.9rem; cursor: pointer; transition: 0.15s;
+    }
+    .quiz-opt:hover:not(:disabled) { border-color: var(--primary); }
+    .quiz-opt.correct { background: var(--ok-bg); border-color: var(--ok-border); font-weight: 600; }
+    .quiz-opt.wrong { background: var(--warn-bg); border-color: var(--warn-border); }
+    .quiz-exp {
+      display: none; margin-top: 10px; padding: 10px 12px; border-radius: 8px;
+      background: var(--surface-2); font-size: 0.87rem; color: var(--text-muted);
+    }
+    .quiz-exp.show { display: block; }
+
+    /* Highlight tìm kiếm */
+    mark.hl { background: #fde047; color: #0f172a; padding: 0 2px; border-radius: 3px; }
+
+    /* Nút lên đầu trang */
+    #topBtn {
+      position: fixed; right: 20px; bottom: 22px; z-index: 200; display: none;
+      width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--border);
+      background: var(--primary); color: #fff; font-size: 1.1rem; cursor: pointer;
+      box-shadow: var(--shadow);
+    }
+
+    .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 260; }
+    .overlay.show { display: block; }
+
+    /* Hộp hình ảnh minh họa SVG sống động cho từng bài & bài tập */
+    .viz-card {
+      margin: 12px 0 14px; padding: 12px 14px; border-radius: 12px;
+      background: linear-gradient(145deg, var(--surface-2), var(--primary-soft));
+      border: 1px solid var(--border); text-align: center;
+    }
+    .viz-card svg, .viz-ex-wrap svg {
+      width: 100%; height: auto; display: block; margin: 0 auto;
+      max-width: 560px; overflow: visible;
+    }
+    .viz-caption {
+      margin-top: 8px; font-size: 0.8rem; color: var(--text-muted); font-style: italic;
+    }
+    .viz-ex-wrap {
+      margin: 10px 0 12px; padding: 8px 10px; border-radius: 10px;
+      background: var(--surface); border: 1px dashed var(--border);
+    }
+    .viz-ex-wrap svg { max-width: 440px; }
+
+    /* Chuyển động nhẹ sống động cho các mô hình Vật lí */
+    @keyframes oscX { 0%,100% { transform: translateX(-28px); } 50% { transform: translateX(28px); } }
+    @keyframes oscY { 0%,100% { transform: translateY(-10px); } 50% { transform: translateY(10px); } }
+    @keyframes driftLeft { 0% { transform: translateX(22px); opacity: 0.35; } 50% { opacity: 1; } 100% { transform: translateX(-22px); opacity: 0.35; } }
+    @keyframes pulseGlow { 0%,100% { opacity: 0.55; } 50% { opacity: 1; } }
+    @keyframes swingPend { 0%,100% { transform: rotate(-16deg); } 50% { transform: rotate(16deg); } }
+    .anim-osc-x { animation: oscX 3s ease-in-out infinite; }
+    .anim-osc-y { animation: oscY 2.4s ease-in-out infinite; }
+    .anim-drift { animation: driftLeft 2.8s linear infinite; }
+    .anim-pulse { animation: pulseGlow 2.2s ease-in-out infinite; }
+    .anim-swing { transform-origin: 90px 24px; animation: swingPend 2.8s ease-in-out infinite; }
+
+    @media (prefers-reduced-motion: reduce) {
+      .anim-osc-x, .anim-osc-y, .anim-drift, .anim-pulse, .anim-swing { animation: none !important; }
+    }
+
+    /* Responsive điện thoại & tablet */
+    @media (max-width: 920px) {
+      .mobile-header { display: flex; }
+      .sidebar { transform: translateX(-100%); }
+      .sidebar.open { transform: translateX(0); }
+      .main { margin-left: 0; padding: 18px 14px 80px; }
+      .hero h1 { font-size: 1.35rem; }
+    }
+
+    /* B4. Print CSS in gọn Bảng công thức */
+    @media print {
+      #physics-canvas, .sidebar, .mobile-header, .toolbar, .filter-bar, #topBtn, .copy-btn, .hero { display: none !important; }
+      body { background: #fff !important; color: #000 !important; }
+      .main { margin: 0 !important; padding: 0 !important; max-width: 100% !important; }
+      .glass-card, .formula-card { box-shadow: none !important; border: 1px solid #999 !important; background: #fff !important; break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Nền Canvas Vật lí động -->
+  <canvas id="physics-canvas" aria-hidden="true"></canvas>
+  <div id="progress-bar" aria-hidden="true"></div>
+
+  <!-- Thanh điều hướng trên điện thoại -->
+  <header class="mobile-header">
+    <button class="icon-btn" id="openMenuBtn" aria-label="Mở mục lục">☰ Mục lục</button>
+    <strong style="color:var(--primary);">PHYSICA 11 · HSG</strong>
+    <button class="icon-btn" id="mobileThemeBtn" aria-label="Đổi chế độ sáng tối">☀️</button>
+  </header>
+  <div class="overlay" id="overlay"></div>
+
+  <div class="layout">
+    <!-- B2. Sidebar cố định bên trái -->
+    <aside class="sidebar" id="sidebar" aria-label="Thanh điều hướng chính">
+      <div class="brand">
+        <div>
+          <div class="brand-title">PHYSICA 11</div>
+          <div class="brand-sub">Cẩm Nang HSG · KNTT</div>
+        </div>
+        <button class="icon-btn" id="desktopThemeBtn" aria-label="Đổi chế độ sáng tối" title="Đổi Sáng / Tối">☀️</button>
+      </div>
+
+      <input type="search" id="searchInput" class="search-box" placeholder="🔍 Tìm khái niệm, công thức, ví dụ..." aria-label="Tìm kiếm nội dung" />
+
+      <nav class="nav-tabs" aria-label="Chuyển đổi trang">
+        <button class="nav-tab active" data-view="chapters">📚 Tóm tắt 4 Chương</button>
+        <button class="nav-tab" data-view="formulas">📐 Bảng Công Thức</button>
+        <button class="nav-tab" data-view="units">⚖️ Đơn Vị & Hằng Số</button>
+        <button class="nav-tab" data-view="quiz">🎯 Ôn Tập Trắc Nghiệm</button>
+      </nav>
+
+      <div class="toc-title">Mục lục chương (Scroll-spy)</div>
+      <ul class="toc-list" id="tocList"></ul>
+    </aside>
+
+    <!-- Nội dung chính -->
+    <main class="main">
+      <section class="hero">
+        <h1>PHYSICA 11 · Tinh Hoa Vật Lí 11 Chuyên Sâu</h1>
+        <p>Biên soạn cho học sinh giỏi ôn thi chuyên & đánh giá năng lực theo SGK Vật lí 11 (Kết nối tri thức): trọn bộ 4 chương, công thức chuẩn + mở rộng, ví dụ 7 bước, bộ đổi đơn vị và 22 câu trắc nghiệm chấm điểm tức thì.</p>
+      </section>
+
+      <!-- VIEW 1: 4 CHƯƠNG + SƠ ĐỒ LIÊN KẾT -->
+      <section id="view-chapters" class="view-section active">
+        <div class="toolbar">
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <button class="icon-btn" id="expandAllBtn" aria-label="Mở tất cả các chương">📂 Mở tất cả</button>
+            <button class="icon-btn" id="collapseAllBtn" aria-label="Thu gọn tất cả các chương">📁 Thu tất cả</button>
+          </div>
+          <span id="searchStatus" style="font-size:0.84rem;color:var(--text-muted);"></span>
+        </div>
+
+        <div id="chaptersContainer"></div>
+
+        <!-- Sơ đồ liên kết chương -->
+        <article class="glass-card" style="padding:20px 22px;">
+          <h2 style="font-size:1.1rem;margin-bottom:6px;">🗺️ Sơ đồ liên kết mạch kiến thức Vật lí 11</h2>
+          <p style="font-size:0.86rem;color:var(--text-muted);">Từ dao động tại chỗ → lan truyền thành sóng → điện trường tĩnh → dòng điện động trong mạch kín.</p>
+          <div class="flow-wrap">
+            <div class="flow-node">Chương 1: Dao động<span>x, v, a, W, Cộng hưởng</span></div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-node">Chương 2: Sóng<span>Sóng cơ, SĐT, Giao thoa, Sóng dừng</span></div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-node">Chương 3: Điện trường<span>Coulomb, E, V, U, Tụ điện</span></div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-node">Chương 4: Dòng điện<span>I = Snve, ĐL Ohm, Nguồn, P</span></div>
+          </div>
+        </article>
+      </section>
+
+      <!-- VIEW 2: BẢNG CÔNG THỨC -->
+      <section id="view-formulas" class="view-section">
+        <div class="glass-card filter-bar">
+          <select id="formulaChapterSelect" class="select-ui" aria-label="Lọc công thức theo chương">
+            <option value="all">Tất cả 4 chương</option>
+          </select>
+          <button class="pill active" data-flevel="all">Tất cả</button>
+          <button class="pill" data-flevel="basic">Cơ bản (SGK)</button>
+          <button class="pill" data-flevel="advanced">Nâng cao (HSG)</button>
+          <button class="icon-btn" id="printFormulasBtn" style="margin-left:auto;" aria-label="In bảng công thức">🖨️ In gọn</button>
+        </div>
+        <div class="glass-card" style="padding:16px;">
+          <div class="data-table-wrap" id="formulaTableWrap"></div>
+        </div>
+      </section>
+
+      <!-- VIEW 3: BẢNG ĐƠN VỊ, HẰNG SỐ & BỘ ĐỔI ĐƠN VỊ MINI -->
+      <section id="view-units" class="view-section">
+        <div class="glass-card" style="padding:18px 20px;">
+          <h2 style="font-size:1.1rem;margin-bottom:10px;">🔄 Bộ đổi đơn vị Vật lí nhanh</h2>
+          <div class="converter-box">
+            <div>
+              <label for="convVal" style="font-size:0.8rem;color:var(--text-muted);display:block;margin-bottom:4px;">Giá trị cần đổi</label>
+              <input type="number" id="convVal" class="input-ui" value="10" step="any" style="width:100%;" />
+            </div>
+            <div>
+              <label for="convType" style="font-size:0.8rem;color:var(--text-muted);display:block;margin-bottom:4px;">Phép đổi</label>
+              <select id="convType" class="select-ui" style="width:100%;">
+                <option value="cm_m">cm → m (× 10⁻²)</option>
+                <option value="mm_m">mm → m (× 10⁻³)</option>
+                <option value="um_m">µm → m (× 10⁻⁶)</option>
+                <option value="nm_m">nm → m (× 10⁻⁹)</option>
+                <option value="mm2_m2">mm² → m² (× 10⁻⁶)</option>
+                <option value="deg_rad">Độ (°) → rad (× π/180)</option>
+                <option value="rad_deg">rad → Độ (°) (× 180/π)</option>
+                <option value="uC_C">µC → C (× 10⁻⁶)</option>
+                <option value="nC_C">nC → C (× 10⁻⁹)</option>
+                <option value="uF_F">µF → F (× 10⁻⁶)</option>
+                <option value="pF_F">pF → F (× 10⁻¹²)</option>
+                <option value="mA_A">mA → A (× 10⁻³)</option>
+                <option value="kmh_ms">km/h → m/s (÷ 3,6)</option>
+                <option value="kwh_j">kW·h → J (× 3,6·10⁶)</option>
+              </select>
+            </div>
+            <div class="conv-result" id="convOut">= 0.1 m</div>
+          </div>
+        </div>
+
+        <div class="glass-card" style="padding:18px 20px;">
+          <h2 style="font-size:1.1rem;margin-bottom:10px;">📏 Bảng đại lượng – Ký hiệu – Đơn vị SI – Thứ nguyên</h2>
+          <div class="data-table-wrap" id="quantitiesTableWrap"></div>
+        </div>
+
+        <div class="glass-card" style="padding:18px 20px;">
+          <h2 style="font-size:1.1rem;margin-bottom:10px;">⚛️ Hằng số Vật lí & Tiền tố SI</h2>
+          <div class="data-table-wrap" id="constantsTableWrap"></div>
+        </div>
+      </section>
+
+      <!-- VIEW 4: TRẮC NGHIỆM ÔN TẬP -->
+      <section id="view-quiz" class="view-section">
+        <div class="glass-card filter-bar">
+          <select id="quizFilter" class="select-ui" aria-label="Chọn bộ câu hỏi trắc nghiệm">
+            <option value="all">Tất cả (22 câu)</option>
+            <option value="ch1">Chương 1. Dao động (3 câu)</option>
+            <option value="ch2">Chương 2. Sóng (3 câu)</option>
+            <option value="ch3">Chương 3. Điện trường (3 câu)</option>
+            <option value="ch4">Chương 4. Dòng điện (3 câu)</option>
+            <option value="mix">Bài thi Tổng hợp HSG (10 câu)</option>
+          </select>
+          <button class="icon-btn" id="shuffleQuizBtn" aria-label="Trộn thứ tự câu hỏi">🔀 Trộn câu</button>
+          <button class="icon-btn" id="reviewWrongBtn" aria-label="Xem lại câu làm sai">❌ Xem câu sai</button>
+          <button class="icon-btn" id="resetQuizBtn" aria-label="Làm lại bài trắc nghiệm">↺ Làm lại</button>
+          <strong id="quizScore" style="margin-left:auto;color:var(--primary);font-size:0.95rem;">Điểm: 0/0</strong>
+        </div>
+        <div id="quizContainer"></div>
+      </section>
+    </main>
+  </div>
+
+  <button id="topBtn" aria-label="Lên đầu trang" title="Lên đầu trang">↑</button>
+
+  <script>
+    /* =====================================================================
+       DỮ LIỆU JSON TÁCH RIÊNG THEO TỪNG CHƯƠNG -> TỪNG BÀI (BÀI 1 -> BÀI 26)
+       ===================================================================== */
+    const PHYSICS_DATA = {
+      chapters: [
+        {
+          id: "ch1",
+          short: "Chương 1 · Dao động",
+          title: "Chương 1. Dao động (Bài 1 – Bài 7)",
+          idea: "Mô tả chuyển động qua lại quanh vị trí cân bằng bằng mô hình dao động điều hòa (hàm cosin/sin), sự chuyển hóa bảo toàn giữa động năng và thế năng, đồng thời phân tích dao động tắt dần, cưỡng bức và cộng hưởng — tiền đề trực tiếp cho Chương 2 (Sóng).",
+          lessons: [
+            {
+              id: "b1_2",
+              short: "Bài 1–2. DĐĐH & Đại lượng đặc trưng",
+              title: "Bài 1 & 2. Dao động điều hòa · Mô tả dao động điều hòa",
+              concepts: [
+                { name: "Dao động điều hòa (SHM), Li độ & Biên độ", sym: "x, A", unit: "m", vec: "Đại số / Vô hướng", dim: "[L]", def: "Dao động điều hòa có li độ x là hàm cosin (hay sin) của thời gian. Li độ x là độ dịch chuyển từ VTCB tại thời điểm t; biên độ A là độ dịch chuyển cực đại (A > 0).", meaning: "Xác định vị trí tức thời và độ rộng quỹ đạo L = 2A.", analogy: "Bóng của thanh quay tròn đều chiếu lên màn thẳng đứng dao động qua lại quanh tâm O.", confuse: "Quãng đường đi được s (luôn tăng) khác li độ x ∈ [-A; A].", quick: "Pít-tông chuyển động trên đoạn 16 cm có A = 8 cm = 0,08 m." },
+                { name: "Chu kì (T), Tần số (f), Tần số góc (ω) & Độ lệch pha (Δφ)", sym: "T, f, ω, Δφ", unit: "s, Hz, rad/s, rad", vec: "Vô hướng / Đại số", dim: "[T], [T⁻¹], [1]", def: "T là thời gian 1 dao động; f = 1/T là số dao động trong 1 s; ω = 2π/T = 2πf. Pha ban đầu φ ∈ [-π; π] xác định trạng thái lúc t = 0; độ lệch pha Δφ = φ₁ - φ₂ không đổi với 2 dao động cùng chu kì.", meaning: "Đặc trưng nhịp độ và sự sớm/trễ pha giữa các dao động.", analogy: "Hai người chạy cùng tốc độ trên sân tròn luôn giữ nguyên góc cách nhau.", confuse: "ω (rad/s) chênh f (Hz) đúng hệ số 2π.", quick: "x₁ = Acos(ωt) sớm pha π/2 (sớm hơn T/4) so với x₂ = Acos(ωt - π/2)." }
+              ],
+              formulas: [
+                { name: "Phương trình li độ & Liên hệ T, f, ω", raw: "x = A\\cos(\\omega t + \\varphi);\\qquad \\omega = \\frac{2\\pi}{T} = 2\\pi f", unit: "m; rad/s", cond: "Dao động điều hòa lí tưởng, không ma sát.", dim: "[L]; [T⁻¹]", level: "basic" }
+              ],
+              examples: [
+                { level: "Nhận biết", q: "Pít-tông của một động cơ dao động điều hòa trên đoạn thẳng dài $16\\text{ cm}$, thực hiện được $300$ dao động toàn phần trong $1\\text{ phút}$. Tính biên độ $A$, chu kì $T$, tần số $f$ và tần số góc $\\omega$.", sol: "<strong>Tóm tắt (SI):</strong> $L = 0{,}16\\text{ m}$; $N = 300$; $\\Delta t = 60\\text{ s}$.<br><strong>Giải:</strong> Biên độ $A = \\frac{L}{2} = 0{,}08\\text{ m} = 8{,}0\\text{ cm}$.<br>Tần số $f = \\frac{N}{\\Delta t} = \\frac{300}{60\\text{ s}} = 5{,}0\\text{ Hz}$; chu kì $T = \\frac{1}{f} = 0{,}20\\text{ s}$; tần số góc $\\omega = 2\\pi f = 10\\pi\\text{ rad/s}$." },
+                { level: "Thông hiểu", q: "Vật dao động điều hòa với phương trình $x = 5\\cos(10\\pi t + \\frac{\\pi}{6})\\text{ cm}$. Tìm biên độ $A$, tần số $f$, chu kì $T$ và li độ tại $t_1 = 0{,}05\\text{ s}$.", sol: "<strong>Tóm tắt (SI):</strong> $A = 0{,}05\\text{ m},\\ \\omega = 10\\pi\\text{ rad/s},\\ \\varphi = \\frac{\\pi}{6}\\text{ rad},\\ t_1 = 0{,}05\\text{ s}$.<br><strong>Giải:</strong> $f = \\frac{\\omega}{2\\pi} = 5{,}0\\text{ Hz}$; $T = \\frac{1}{f} = 0{,}20\\text{ s}$.<br>Li độ: $x_1 = 5\\cos(10\\pi\\cdot 0{,}05 + \\frac{\\pi}{6}) = 5\\cos(\\frac{2\\pi}{3}) = -2{,}5\\text{ cm} = -0{,}025\\text{ m}$." },
+                { level: "Vận dụng cao", q: "Hai vật dao động điều hòa cùng tần số $f = 2\\text{ Hz}$, lệch pha nhau $\\frac{\\pi}{3}\\text{ rad}$. Vật 1 có phương trình $x_1 = 8\\cos(4\\pi t - \\frac{\\pi}{6})\\text{ cm}$; vật 2 sớm pha hơn vật 1 và có biên độ $6\\text{ cm}$. Viết phương trình $x_2$ và tính khoảng thời gian ngắn nhất giữa hai lần hai vật đạt biên dương.", sol: "<strong>Giải:</strong> Vì vật 2 sớm pha hơn $\\frac{\\pi}{3}$ nên $\\varphi_2 = -\\frac{\\pi}{6} + \\frac{\\pi}{3} = +\\frac{\\pi}{6}\\text{ rad}$.<br>Phương trình: $x_2 = 6\\cos(4\\pi t + \\frac{\\pi}{6})\\text{ cm}$.<br>Khoảng thời gian lệch pha giữa hai lần đạt biên dương: $\\Delta t = \\frac{\\Delta\\varphi}{\\omega} = \\frac{\\pi/3}{4\\pi} = \\frac{1}{12}\\text{ s} \\approx 0{,}0833\\text{ s}$." }
+              ]
+            },
+            {
+              id: "b3_4",
+              short: "Bài 3–4. Vận tốc, Gia tốc & Bài tập DĐĐH",
+              title: "Bài 3 & 4. Vận tốc, gia tốc & Bài tập về dao động điều hòa",
+              concepts: [
+                { name: "Vận tốc & Gia tốc trong DĐĐH", sym: "v, a", unit: "m/s; m/s²", vec: "Vectơ (1D)", dim: "[LT⁻¹]; [LT⁻²]", def: "Vận tốc là đạo hàm li độ theo thời gian (sớm pha π/2 so với x); gia tốc là đạo hàm vận tốc theo thời gian (ngược pha với x, luôn hướng về VTCB).", meaning: "Tại VTCB: |v| cực đại, a = 0; tại biên: v = 0, |a| cực đại.", analogy: "Xích đu lướt nhanh nhất ở điểm thấp nhất và dừng tức thời ở hai đỉnh cao nhất.", confuse: "Gia tốc đổi chiều tại VTCB, còn vận tốc đổi chiều tại hai vị trí biên.", quick: "Độ dốc đồ thị (x-t) là v; độ dốc đồ thị (v-t) là a." }
+              ],
+              formulas: [
+                { name: "Phương trình vận tốc, gia tốc & Độc lập x–v", raw: "v = -\\omega A\\sin(\\omega t+\\varphi);\\quad a = -\\omega^2 x;\\quad v = \\pm\\omega\\sqrt{A^2 - x^2}", unit: "m/s; m/s²", cond: "v_max = ωA tại x = 0; a_max = ω²A tại x = ±A.", dim: "[LT⁻¹]; [LT⁻²]", level: "basic" },
+                { name: "Hệ thức độc lập chuẩn hóa (x,v) và (v,a)", raw: "\\left(\\frac{x}{A}\\right)^2 + \\left(\\frac{v}{\\omega A}\\right)^2 = 1;\\qquad \\left(\\frac{v}{\\omega A}\\right)^2 + \\left(\\frac{a}{\\omega^2 A}\\right)^2 = 1", unit: "Không thứ nguyên", cond: "Suy từ sin²Φ+cos²Φ=1. Dùng tìm nhanh ω khi biết 2 cặp (v, a).", dim: "[1]", level: "advanced" },
+                { name: "Quãng đường cực đại / cực tiểu trong Δt < T/2", raw: "S_{\\max} = 2A\\sin\\left(\\frac{\\omega\\Delta t}{2}\\right);\\qquad S_{\\min} = 2A\\left[1 - \\cos\\left(\\frac{\\omega\\Delta t}{2}\\right)\\right]", unit: "m", cond: "Suy từ đường tròn lượng giác (đối xứng quanh VTCB / biên).", dim: "[L]", level: "advanced", sup: true }
+              ],
+              examples: [
+                { level: "Thông hiểu", q: "Vật dao động điều hòa khi qua VTCB có tốc độ $40\\text{ cm/s}$, khi ở vị trí biên có độ lớn gia tốc $4{,}0\\text{ m/s}^2$. Tính tần số góc $\\omega$, chu kì $T$ và biên độ $A$.", sol: "<strong>Tóm tắt (SI):</strong> $v_{\\max} = 0{,}40\\text{ m/s}$; $a_{\\max} = 4{,}0\\text{ m/s}^2$.<br><strong>Giải:</strong> $\\omega = \\frac{a_{\\max}}{v_{\\max}} = \\frac{4{,}0}{0{,}40} = 10\\text{ rad/s}$; $T = \\frac{2\\pi}{\\omega} = \\frac{\\pi}{5}\\text{ s} \\approx 0{,}628\\text{ s}$.<br>Biên độ: $A = \\frac{v_{\\max}}{\\omega} = \\frac{0{,}40}{10} = 0{,}040\\text{ m} = 4{,}0\\text{ cm}$." },
+                { level: "Thông hiểu", q: "Đầu dây đàn dao động $x = 4\\cos(2\\pi t - \\frac{\\pi}{3})\\text{ cm}$. Tính $x, v, a$ tại $t = 0{,}25\\text{ s}$.", sol: "<strong>Tóm tắt (SI):</strong> $A=0{,}04\\text{ m},\\ \\omega=2\\pi\\text{ rad/s},\\ \\Phi(0{,}25)=\\frac{\\pi}{6}\\text{ rad}$.<br><strong>Giải:</strong> $x = 0{,}04\\cos(\\frac{\\pi}{6}) \\approx 0{,}0346\\text{ m} = 3{,}46\\text{ cm}$.<br>$v = -2\\pi(0{,}04)\\sin(\\frac{\\pi}{6}) \\approx -0{,}126\\text{ m/s}$; $a = -(2\\pi)^2(0{,}0346) \\approx -1{,}37\\text{ m/s}^2$.<br><strong>Kiểm tra:</strong> $x > 0 \\Rightarrow a < 0$ hướng về VTCB (hợp lí)." },
+                { level: "Vận dụng cao", q: "Một vật DĐĐH ở thời điểm $t_1$ có $v_1 = 30\\text{ cm/s},\\ a_1 = 4{,}0\\text{ m/s}^2$; ở thời điểm $t_2$ có $v_2 = 40\\text{ cm/s},\\ a_2 = 3{,}0\\text{ m/s}^2$. Tính $\\omega$, biên độ $A$ và quãng đường lớn nhất vật đi được trong $\\Delta t = \\frac{T}{6}$.", sol: "<strong>Giải:</strong> Từ hệ thức độc lập $(v, a)$:<br>$\\omega^2 = \\frac{a_1^2 - a_2^2}{v_2^2 - v_1^2} = \\frac{4{,}0^2 - 3{,}0^2}{0{,}40^2 - 0{,}30^2} = \\frac{7}{0{,}07} = 100 \\Rightarrow \\omega = 10\\text{ rad/s}$.<br>Biên độ: $A = \\sqrt{\\frac{v_1^2}{\\omega^2} + \\frac{a_1^2}{\\omega^4}} = \\sqrt{\\frac{0{,}09}{100} + \\frac{16}{10\\,000}} = 0{,}050\\text{ m} = 5{,}0\\text{ cm}$.<br>Với $\\Delta t = \\frac{T}{6} \\Rightarrow \\Delta\\varphi = \\frac{\\pi}{3} \\Rightarrow S_{\\max} = 2A\\sin(\\frac{\\pi}{6}) = A = 5{,}0\\text{ cm}$." }
+              ]
+            },
+            {
+              id: "b5_7",
+              short: "Bài 5 & 7. Năng lượng DĐĐH & Con lắc",
+              title: "Bài 5 & 7. Động năng, Thế năng & Sự chuyển hóa năng lượng trong DĐĐH",
+              concepts: [
+                { name: "Cơ năng DĐĐH, Con lắc lò xo & Con lắc đơn", sym: "W_d, W_t, W", unit: "J", vec: "Vô hướng", dim: "[ML²T⁻²]", def: "Trong DĐĐH không ma sát, động năng và thế năng chuyển hóa qua lại liên tục còn tổng cơ năng W = W_d + W_t được bảo toàn và tỉ lệ với A².", meaning: "Đồ thị W_d(x) là parabol úp, W_t(x) là parabol ngửa; theo thời gian chúng biến thiên với chu kì T/2.", analogy: "Đổ nước qua lại giữa hai bình giống nhau: bình này đầy thì bình kia cạn, tổng lượng nước không đổi.", confuse: "Con lắc đơn chỉ DĐĐH khi góc lệch nhỏ α₀ ≤ 10° (α tính theo radian).", quick: "Tại x = ±A/√2 thì W_d = W_t = W/2." }
+              ],
+              formulas: [
+                { name: "Động năng, Thế năng & Cơ năng tổng quát", raw: "W_d = \\frac{1}{2}mv^2 = \\frac{1}{2}m\\omega^2(A^2-x^2);\\quad W_t = \\frac{1}{2}m\\omega^2 x^2;\\quad W = \\frac{1}{2}m\\omega^2 A^2", unit: "J", cond: "Không ma sát, mốc thế năng tại VTCB.", dim: "[ML²T⁻²]", level: "basic" },
+                { name: "Con lắc lò xo & Con lắc đơn (góc nhỏ)", raw: "T_{lx} = 2\\pi\\sqrt{\\frac{m}{k}},\\ W_{t,lx}=\\frac{1}{2}kx^2;\\qquad \\omega_{clđ}=\\sqrt{\\frac{g}{l}},\\ W_{t,clđ}=mgl(1-\\cos\\alpha)\\approx\\frac{1}{2}m\\frac{g}{l}s^2", unit: "s; J; rad/s", cond: "Con lắc đơn: α₀ ≤ 10°, α (rad).", dim: "[T]; [J]", level: "basic" },
+                { name: "Tỉ số W_d = nW_t & Chu kì biến thiên năng lượng", raw: "W_d = n W_t \\Rightarrow |x| = \\frac{A}{\\sqrt{n+1}};\\qquad T_{W_d} = T_{W_t} = \\frac{T}{2}", unit: "m; s", cond: "Suy từ W=(n+1)W_t và công thức hạ bậc cos².", dim: "[L]; [T]", level: "advanced", sup: true }
+              ],
+              examples: [
+                { level: "Thông hiểu", q: "Con lắc lò xo có $k = 50\\text{ N/m}$, vật nặng $m = 500\\text{ g}$, dao động điều hòa biên độ $A = 4{,}0\\text{ cm}$. Tính chu kì $T$, cơ năng $W$ và thế năng tại li độ $x = -2{,}0\\text{ cm}$.", sol: "<strong>Tóm tắt (SI):</strong> $k = 50\\text{ N/m}$; $m = 0{,}50\\text{ kg}$; $A = 0{,}040\\text{ m}$; $x = -0{,}020\\text{ m}$.<br><strong>Giải:</strong> $T = 2\\pi\\sqrt{\\frac{m}{k}} = 2\\pi\\sqrt{\\frac{0{,}50}{50}} = 0{,}2\\pi\\text{ s} \\approx 0{,}628\\text{ s}$.<br>Cơ năng: $W = \\frac{1}{2}kA^2 = \\frac{1}{2}(50)(0{,}040)^2 = 0{,}040\\text{ J}$.<br>Thế năng tại $x = -2{,}0\\text{ cm}$: $W_t = \\frac{1}{2}(50)(-0{,}020)^2 = 0{,}010\\text{ J}$." },
+                { level: "Vận dụng cao", q: "Con lắc lò xo $m = 200\\text{ g},\\ k = 80\\text{ N/m}$ dao động ngang. Khi $x_1 = 3\\text{ cm}$ thì $v_1 = 80\\text{ cm/s}$. Tính $A, W$, li độ lúc $W_d = 3W_t$ và thời gian ngắn nhất từ VTCB đến đó.", sol: "<strong>Giải:</strong> $\\omega = \\sqrt{80/0{,}20} = 20\\text{ rad/s}$.<br>• $A = \\sqrt{0{,}03^2 + (0{,}80/20)^2} = 0{,}05\\text{ m} = 5{,}0\\text{ cm}$; $W = \\frac{1}{2}(80)(0{,}05)^2 = 0{,}10\\text{ J}$.<br>• $W_d = 3W_t \\Rightarrow |x| = \\frac{5}{\\sqrt{4}} = 2{,}5\\text{ cm}$.<br>• Quét góc từ VTCB đến $A/2$ là $\\frac{\\pi}{6}\\text{ rad} \\Rightarrow \\Delta t_{\\min} = \\frac{\\pi/6}{20} = \\frac{\\pi}{120}\\text{ s} \\approx 0{,}0262\\text{ s}$." },
+                { level: "Vận dụng cao", q: "Con lắc đơn dài $l = 1{,}0\\text{ m}$, vật nặng $m = 100\\text{ g}$ tại nơi có $g = 10\\text{ m/s}^2$, dao động điều hòa với biên độ góc $\\alpha_0 = 0{,}10\\text{ rad}$. Tính cơ năng $W$ và tốc độ của vật khi thế năng bằng $3$ lần động năng.", sol: "<strong>Giải:</strong> Cơ năng: $W = \\frac{1}{2}mgl\\alpha_0^2 = \\frac{1}{2}(0{,}10)(10)(1{,}0)(0{,}10)^2 = 5{,}0\\cdot 10^{-3}\\text{ J} = 5{,}0\\text{ mJ}$.<br>Khi $W_t = 3W_d \\Rightarrow W_d = \\frac{W}{4} = 1{,}25\\cdot 10^{-3}\\text{ J}$.<br>Tốc độ vật: $v = \\sqrt{\\frac{2W_d}{m}} = \\sqrt{\\frac{2{,}5\\cdot 10^{-3}}{0{,}10}} \\approx 0{,}158\\text{ m/s} = 15{,}8\\text{ cm/s}$." }
+              ]
+            },
+            {
+              id: "b6",
+              short: "Bài 6. Tắt dần, Cưỡng bức & Cộng hưởng",
+              title: "Bài 6. Dao động tắt dần · Dao động cưỡng bức · Hiện tượng cộng hưởng",
+              concepts: [
+                { name: "Tắt dần, Cưỡng bức & Cộng hưởng (Resonance)", sym: "f = f₀", unit: "Hz", vec: "Hiện tượng", dim: "[T⁻¹]", def: "Lực ma sát/lực cản tiêu hao cơ năng làm biên độ giảm dần (tắt dần). Ngoại lực tuần hoàn tạo dao động cưỡng bức có tần số đúng bằng tần số ngoại lực f; biên độ đạt cực đại khi f = f₀ (cộng hưởng).", meaning: "Lực cản càng nhỏ thì đỉnh đồ thị cộng hưởng càng nhọn và cao.", analogy: "Giảm xóc xe máy (tắt dần có lợi); hộp đàn, lò vi sóng (cộng hưởng có lợi); cầu Tacoma sập (cộng hưởng có hại).", confuse: "Tần số dao động cưỡng bức bằng f của ngoại lực, KHÔNG bằng f₀.", quick: "Con lắc dài 0,98 m (g = 9,8 m/s²) cộng hưởng khi f ≈ 0,503 Hz." }
+              ],
+              formulas: [
+                { name: "Điều kiện cộng hưởng cơ", raw: "f_{\\text{cưỡng bức}} = f_0 \\iff T_{\\text{cưỡng bức}} = T_0", unit: "Hz; s", cond: "Ngoại lực tuần hoàn tác dụng lên hệ có tần số riêng f₀.", dim: "[T⁻¹]", level: "basic" }
+              ],
+              examples: [
+                { level: "Nhận biết", q: "Con lắc lò xo có $m = 100\\text{ g},\\ k = 40\\text{ N/m}$ chịu ngoại lực cưỡng bức $F = 2\\cos(5\\pi t)\\text{ N}$. Xác định tần số dao động ổn định của con lắc và cho biết biên độ tăng hay giảm nếu tăng tần số ngoại lực từ $2{,}5\\text{ Hz}$ lên $3{,}0\\text{ Hz}$.", sol: "<strong>Giải:</strong> Tần số ngoại lực $f = \\frac{5\\pi}{2\\pi} = 2{,}5\\text{ Hz}$ ⇒ tần số dao động cưỡng bức ổn định của con lắc là $2{,}5\\text{ Hz}$.<br>Tần số riêng của con lắc: $f_0 = \\frac{1}{2\\pi}\\sqrt{\\frac{40}{0{,}10}} = \\frac{10}{\\pi} \\approx 3{,}18\\text{ Hz}$.<br>Khi tăng $f$ từ $2{,}5\\text{ Hz}$ lên $3{,}0\\text{ Hz}$ (tiến gần $f_0$ hơn) thì biên độ dao động <strong>tăng lên</strong>." },
+                { level: "Thông hiểu", q: "Con lắc đơn dài $l = 0{,}98\\text{ m}$ ($g = 9{,}8\\text{ m/s}^2$) treo trên toa tàu chịu lực kích thích tuần hoàn tần số $f$. Khi nào con lắc rung mạnh nhất?", sol: "<strong>Giải:</strong> $\\omega_0 = \\sqrt{g/l} = \\sqrt{10}\\text{ rad/s} \\Rightarrow f_0 = \\frac{\\sqrt{10}}{2\\pi} \\approx 0{,}503\\text{ Hz}$.<br>Con lắc rung mạnh nhất khi xảy ra cộng hưởng: $f = f_0 \\approx 0{,}503\\text{ Hz}$." },
+                { level: "Vận dụng cao", q: "Một người xách xô nước đi đều trên đường, mỗi bước chân dài $s = 0{,}60\\text{ m}$. Chu kì dao động riêng của nước trong xô là $T_0 = 0{,}50\\text{ s}$. Tính tốc độ đi bộ khiến nước trong xô sóng sánh mạnh nhất.", sol: "<strong>Giải:</strong> Nước sóng sánh mạnh nhất khi xảy ra cộng hưởng: chu kì bước chân $T = T_0 = 0{,}50\\text{ s}$.<br>Tốc độ đi bộ: $v = \\frac{s}{T_0} = \\frac{0{,}60\\text{ m}}{0{,}50\\text{ s}} = 1{,}2\\text{ m/s} = 4{,}32\\text{ km/h}$." }
+              ]
+            }
+          ],
+          errors: [
+            "Quên đổi cm → m và g → kg khi tính năng lượng $W = \\frac{1}{2}m\\omega^2 A^2$ (J).",
+            "Nhầm dấu pha ban đầu φ: vật đi theo chiều dương ($v>0$) thì $\\varphi < 0$; đi theo chiều âm ($v<0$) thì $\\varphi > 0$.",
+            "Thay số đo độ thay vì radian vào công thức thế năng con lắc đơn $W_t \\approx \\frac{1}{2}mgl\\alpha^2$."
+          ],
+          summary: "Dao động điều hòa là chuyển động hình sin đặc trưng bởi (A, ω, φ) với cơ năng bảo toàn, đồng thời chịu chi phối bởi lực cản (tắt dần) và ngoại lực tuần hoàn (cưỡng bức, cộng hưởng)."
+        },
+        {
+          id: "ch2",
+          short: "Chương 2 · Sóng",
+          title: "Chương 2. Sóng (Bài 8 – Bài 15)",
+          idea: "Mô tả sự lan truyền dao động và năng lượng trong không gian (sóng cơ và sóng điện từ) qua hệ thức λ = vT = v/f, đồng thời giải thích hai hiện tượng đặc trưng bản chất sóng là giao thoa và sóng dừng.",
+          lessons: [
+            {
+              id: "b8_9_10",
+              short: "Bài 8–10. Mô tả sóng · Ngang/Dọc · Đo f âm",
+              title: "Bài 8, 9 & 10. Mô tả sóng · Sóng ngang, sóng dọc · Thực hành đo tần số sóng âm",
+              concepts: [
+                { name: "Sóng ngang, Sóng dọc & Bước sóng (λ)", sym: "λ, v, I", unit: "m; m/s; W/m²", vec: "Vô hướng", dim: "[L]; [LT⁻¹]; [MT⁻³]", def: "Sóng ngang có phương dao động vuông góc phương truyền sóng; sóng dọc có phương dao động trùng phương truyền. Bước sóng λ là khoảng cách 2 phần tử gần nhất dao động đồng pha. Cường độ sóng I là năng lượng truyền qua 1 đơn vị diện tích vuông góc trong 1 s.", meaning: "Sóng truyền pha và năng lượng mà không mang phần tử vật chất đi theo; v chỉ phụ thuộc môi trường.", analogy: "Miếng xốp nhấp nhô tại chỗ trên mặt nước; màng loa nén–dãn không khí tạo sóng âm.", confuse: "Tốc độ truyền sóng v (hằng số môi trường) khác tốc độ dao động phần tử.", quick: "Âm nghe được: 16 Hz – 20 000 Hz; nốt La (A) = 440 Hz; đo f bằng dao động kí điện tử." }
+              ],
+              formulas: [
+                { name: "Hệ thức cơ bản của sóng", raw: "\\lambda = v T = \\frac{v}{f}", unit: "m", cond: "Môi trường đồng nhất (v không phụ thuộc tần số f).", dim: "[L]", level: "basic" },
+                { name: "Phương trình sóng chạy & Độ lệch pha", raw: "u_M(t) = A\\cos\\left(\\omega t - \\frac{2\\pi x}{\\lambda} + \\varphi_0\\right);\\qquad \\Delta\\varphi = \\frac{2\\pi d}{\\lambda}", unit: "m; rad", cond: "Suy từ độ trễ Δt = x/v. Cùng pha: d = kλ; ngược pha: d = (k+0,5)λ.", dim: "[L]; [1]", level: "advanced", sup: true }
+              ],
+              examples: [
+                { level: "Thông hiểu", q: "Sóng âm tần số $192\\text{ Hz}$ truyền được $91{,}4\\text{ m}$ trong $0{,}27\\text{ s}$. Tính tốc độ truyền sóng $v$ và bước sóng $\\lambda$.", sol: "<strong>Giải:</strong> $v = \\frac{s}{t} = \\frac{91{,}4\\text{ m}}{0{,}27\\text{ s}} \\approx 338{,}5\\text{ m/s}$; $\\lambda = \\frac{v}{f} = \\frac{338{,}5}{192} \\approx 1{,}76\\text{ m}$." },
+                { level: "Thông hiểu", q: "Nguồn sóng mặt nước dao động chu kì $T = 0{,}25\\text{ s}$. Khoảng cách giữa $5$ ngọn sóng liên tiếp trên một phương truyền sóng là $2{,}0\\text{ m}$. Tính bước sóng $\\lambda$ và tốc độ truyền sóng $v$.", sol: "<strong>Giải:</strong> Giữa $5$ ngọn sóng liên tiếp có $4$ bước sóng: $4\\lambda = 2{,}0\\text{ m} \\Rightarrow \\lambda = 0{,}50\\text{ m}$.<br>Tốc độ truyền sóng: $v = \\frac{\\lambda}{T} = \\frac{0{,}50\\text{ m}}{0{,}25\\text{ s}} = 2{,}0\\text{ m/s}$." },
+                { level: "Vận dụng cao", q: "Sóng cơ hình sin biên độ $A = 5\\text{ cm}$, tần số $f = 10\\text{ Hz}$ truyền với tốc độ $v = 40\\text{ cm/s}$. Hai điểm $M, N$ trên phương truyền sóng cách nhau $5\\text{ cm}$. Tính độ lệch pha giữa $M$ và $N$; lúc $u_M = +3\\text{ cm}$ thì độ lớn li độ của $N$ bằng bao nhiêu?", sol: "<strong>Giải:</strong> Bước sóng $\\lambda = \\frac{v}{f} = \\frac{40}{10} = 4{,}0\\text{ cm}$.<br>Độ lệch pha: $\\Delta\\varphi = \\frac{2\\pi d}{\\lambda} = \\frac{2\\pi(5)}{4} = 2{,}5\\pi = 2\\pi + \\frac{\\pi}{2}$ (hai điểm <strong>vuông pha</strong>).<br>Do vuông pha nên $u_M^2 + u_N^2 = A^2 \\Rightarrow |u_N| = \\sqrt{5^2 - 3^2} = 4{,}0\\text{ cm}$." }
+              ]
+            },
+            {
+              id: "b11",
+              short: "Bài 11. Sóng điện từ",
+              title: "Bài 11. Sóng điện từ & Thang sóng điện từ",
+              concepts: [
+                { name: "Sóng điện từ (Electromagnetic Wave)", sym: "c", unit: "m/s", vec: "Sóng ngang", dim: "[LT⁻¹]", def: "Là điện từ trường lan truyền trong không gian, truyền được trong chân không với tốc độ ánh sáng c = 3·10⁸ m/s.", meaning: "Thang SĐT xếp theo bước sóng giảm dần (năng lượng/tần số tăng dần): Sóng vô tuyến (1 mm–100 km) → Vi ba → Hồng ngoại (0,76 µm–1 mm) → Ánh sáng nhìn thấy (0,38–0,76 µm) → Tử ngoại (10–400 nm) → Tia X (30 pm–3 nm) → Tia gamma (10⁻⁵–0,1 nm).", analogy: "Wi-Fi, lò vi sóng, ánh sáng Mặt Trời và tia X đều chung bản chất sóng điện từ.", confuse: "Sóng cơ không truyền được trong chân không; sóng điện từ truyền nhanh nhất trong chân không.", quick: "Sóng VHF (1–10 m), UHF (10 cm–1 m) truyền thẳng không phản xạ tầng điện li." }
+              ],
+              formulas: [
+                { name: "Bước sóng điện từ trong chân không", raw: "\\lambda = \\frac{c}{f} \\quad (c = 3\\cdot 10^8\\text{ m/s})", unit: "m", cond: "Truyền trong chân không (hoặc gần đúng trong không khí).", dim: "[L]", level: "basic" }
+              ],
+              examples: [
+                { level: "Nhận biết", q: "Tính khoảng tần số của ánh sáng nhìn thấy có bước sóng từ $0{,}38\\ \\mu\\text{m}$ (tím) đến $0{,}76\\ \\mu\\text{m}$ (đỏ) trong chân không.", sol: "<strong>Giải:</strong> $f_{\\text{đỏ}} = \\frac{3\\cdot 10^8}{0{,}76\\cdot 10^{-6}} \\approx 3{,}95\\cdot 10^{14}\\text{ Hz}$; $f_{\\text{tím}} = \\frac{3\\cdot 10^8}{0{,}38\\cdot 10^{-6}} \\approx 7{,}89\\cdot 10^{14}\\text{ Hz}$." },
+                { level: "Thông hiểu", q: "Một đài phát thanh FM phát sóng vô tuyến có tần số $f = 100\\text{ MHz}$ trong không khí ($c = 3\\cdot 10^8\\text{ m/s}$). Tính bước sóng $\\lambda$ và cho biết sóng này thuộc dải VHF hay UHF.", sol: "<strong>Giải:</strong> $\\lambda = \\frac{c}{f} = \\frac{3\\cdot 10^8\\text{ m/s}}{100\\cdot 10^6\\text{ Hz}} = 3{,}0\\text{ m}$.<br>Vì $1\\text{ m} \\le \\lambda \\le 10\\text{ m}$ nên sóng thuộc dải <strong>VHF</strong> (truyền thẳng, không bị phản xạ bởi tầng điện li)." },
+                { level: "Vận dụng", q: "Vệ tinh địa tĩnh ở độ cao $h = 36\\,000\\text{ km}$ ngay trên đài phát mặt đất (bán kính Trái Đất $R = 6\\,400\\text{ km}$, $c = 3\\cdot 10^8\\text{ m/s}$). Tính thời gian ngắn nhất để sóng từ đài lên vệ tinh rồi phản xạ về đúng đài, và khoảng cách truyền thẳng xa nhất từ vệ tinh đến mặt đất.", sol: "<strong>Giải:</strong> Thời gian ngắn nhất: $t_{\\min} = \\frac{2h}{c} = \\frac{2(3{,}6\\cdot 10^7\\text{ m})}{3\\cdot 10^8\\text{ m/s}} = 0{,}24\\text{ s}$.<br>Khoảng cách truyền thẳng xa nhất là đoạn tiếp tuyến tới bề mặt Trái Đất:<br>$d_{\\max} = \\sqrt{(R+h)^2 - R^2} = \\sqrt{42\\,400^2 - 6\\,400^2} \\approx 41\\,914\\text{ km}$." }
+              ]
+            },
+            {
+              id: "b12_14",
+              short: "Bài 12 & 14. Giao thoa sóng & Young",
+              title: "Bài 12 & 14. Giao thoa sóng · Thí nghiệm Young về giao thoa ánh sáng",
+              concepts: [
+                { name: "Giao thoa sóng (Interference) & Nguồn kết hợp", sym: "i, a, D", unit: "m", vec: "Hiện tượng", dim: "[L]", def: "Hai nguồn kết hợp (cùng phương, cùng tần số, độ lệch pha không đổi) gặp nhau tạo vân giao thoa ổn định: cực đại (đồng pha) và cực tiểu/đứng yên (ngược pha). Thí nghiệm Young chứng minh ánh sáng có bản chất sóng.", meaning: "Khoảng vân i là khoảng cách giữa hai vân sáng hoặc hai vân tối liên tiếp.", analogy: "Hai viên sỏi thả nhịp nhàng xuống mặt nước tạo mạng hypebol đứng yên.", confuse: "Giữa N vân sáng liên tiếp chỉ có (N - 1) khoảng vân i.", quick: "Chiếu ánh sáng trắng vào 2 khe Young: vân trung tâm màu trắng, hai bên là dải màu cầu vồng." }
+              ],
+              formulas: [
+                { name: "Công thức giao thoa ánh sáng Young", raw: "i = \\frac{\\lambda D}{a} \\iff \\lambda = \\frac{i a}{D}", unit: "m", cond: "a ≪ D; mẹo: λ (µm), D (m), a (mm) ⇒ i (mm).", dim: "[L]", level: "basic" },
+                { name: "Cực đại/cực tiểu giao thoa & Trùng vân 2 bức xạ", raw: "d_2-d_1=k\\lambda\\text{ (CĐ)};\\quad x_s=ki;\\quad x_t=(k+0{,}5)i;\\quad k_1\\lambda_1=k_2\\lambda_2", unit: "m", cond: "Hai nguồn cùng pha. Dùng đếm số cực đại và tìm vân trùng màu.", dim: "[L]", level: "advanced", sup: true }
+              ],
+              examples: [
+                { level: "Thông hiểu", q: "Trong thí nghiệm Young với $a = 0{,}50\\text{ mm},\\ D = 1{,}0\\text{ m}$, khoảng cách giữa $6$ vân sáng liên tiếp đo được là $6{,}0\\text{ mm}$. Tính khoảng vân $i$ và bước sóng ánh sáng $\\lambda$.", sol: "<strong>Giải:</strong> $6$ vân sáng liên tiếp gồm $5$ khoảng vân: $i = \\frac{6{,}0\\text{ mm}}{5} = 1{,}2\\text{ mm}$.<br>Bước sóng: $\\lambda = \\frac{ia}{D} = \\frac{(1{,}2\\text{ mm})(0{,}50\\text{ mm})}{1{,}0\\text{ m}} = 0{,}60\\ \\mu\\text{m}$." },
+                { level: "Vận dụng cao", q: "Thí nghiệm Young có $a = 1{,}0\\text{ mm},\\ D = 2{,}0\\text{ m}$, chiếu đồng thời $\\lambda_1 = 0{,}60\\ \\mu\\text{m}$ và $\\lambda_2 = 0{,}45\\ \\mu\\text{m}$. Tìm $i_1, i_2$ và khoảng cách ngắn nhất từ vân trung tâm đến vân sáng cùng màu với nó.", sol: "<strong>Giải:</strong> $i_1 = \\frac{0{,}60\\cdot 2{,}0}{1{,}0} = 1{,}2\\text{ mm}$; $i_2 = \\frac{0{,}45\\cdot 2{,}0}{1{,}0} = 0{,}90\\text{ mm}$.<br>Trùng vân: $k_1 i_1 = k_2 i_2 \\Rightarrow \\frac{k_1}{k_2} = \\frac{3}{4} \\Rightarrow x_{\\min} = 3(1{,}2\\text{ mm}) = 3{,}6\\text{ mm}$." },
+                { level: "Vận dụng cao", q: "Trên mặt nước có hai nguồn kết hợp cùng pha $S_1, S_2$ cách nhau $10\\text{ cm}$, tần số $f = 20\\text{ Hz}$, tốc độ truyền sóng $v = 60\\text{ cm/s}$. Đếm số điểm dao động cực đại và cực tiểu trên đoạn thẳng $S_1 S_2$ (không kể hai nguồn).", sol: "<strong>Giải:</strong> Bước sóng $\\lambda = \\frac{v}{f} = \\frac{60}{20} = 3{,}0\\text{ cm}$.<br>• Cực đại: $-\\frac{10}{3} < k < \\frac{10}{3} \\Rightarrow k \\in \\{-3, -2, -1, 0, 1, 2, 3\\}$ ⇒ có <strong>7 cực đại</strong>.<br>• Cực tiểu: $-\\frac{10}{3} - 0{,}5 < k < \\frac{10}{3} - 0{,}5 \\Rightarrow -3{,}83 < k < 2{,}83 \\Rightarrow k \\in \\{-3, -2, -1, 0, 1, 2\\}$ ⇒ có <strong>6 cực tiểu</strong>." }
+              ]
+            },
+            {
+              id: "b13_15",
+              short: "Bài 13 & 15. Sóng dừng & Đo tốc độ âm",
+              title: "Bài 13 & 15. Sóng dừng · Thực hành đo tốc độ truyền âm",
+              concepts: [
+                { name: "Sóng dừng (Standing Wave), Nút sóng & Bụng sóng", sym: "L, λ/2", unit: "m", vec: "Hiện tượng", dim: "[L]", def: "Tổng hợp sóng tới và sóng phản xạ cùng biên độ, cùng bước sóng truyền ngược chiều tạo các điểm luôn đứng yên (nút sóng) và dao động cực đại (bụng sóng).", meaning: "Giải thích âm nhạc cụ dây (2 đầu cố định) và nhạc cụ khí (1 đầu kín, 1 đầu hở).", analogy: "Dây đàn guitar rung thành các múi cố định; ống sáo thay đổi chiều dài cột khí bằng cách bịt lỗ.", confuse: "Hai nút liên tiếp cách nhau λ/2; nút và bụng liên tiếp cách nhau λ/4.", quick: "Đo v âm bằng ống trụ pít-tông: dùng hiệu d = l₂ - l₁ = λ/2 để khử sai số miệng ống." }
+              ],
+              formulas: [
+                { name: "Điều kiện sóng dừng & Đo tốc độ âm", raw: "L = n\\frac{\\lambda}{2}\\text{ (2 đầu cố định)};\\quad L = (2n+1)\\frac{\\lambda}{4}\\text{ (1 đầu tự do)};\\quad v = 2(l_2-l_1)f", unit: "m; m/s", cond: "n = 1,2,3... (2 đầu cố định); n = 0,1,2... (1 đầu tự do).", dim: "[L]; [LT⁻¹]", level: "basic" },
+                { name: "Biên độ điểm bất kì trong sóng dừng", raw: "A_M = 2A\\left|\\sin\\left(\\frac{2\\pi d_{\\text{nút}}}{\\lambda}\\right)\\right| = 2A\\left|\\cos\\left(\\frac{2\\pi d_{\\text{bụng}}}{\\lambda}\\right)\\right|", unit: "m", cond: "Suy từ tổng hợp sóng tới và sóng phản xạ.", dim: "[L]", level: "advanced", sup: true }
+              ],
+              examples: [
+                { level: "Thông hiểu", q: "Một dây đàn dài $L = 0{,}80\\text{ m}$ hai đầu cố định, tốc độ truyền sóng trên dây là $v = 320\\text{ m/s}$. Tính bước sóng $\\lambda$ và tần số âm cơ bản $f_1$ (ứng với 1 bụng sóng).", sol: "<strong>Giải:</strong> Ứng với 1 bụng sóng ($n = 1$): $L = \\frac{\\lambda}{2} \\Rightarrow \\lambda = 2L = 1{,}60\\text{ m}$.<br>Tần số âm cơ bản: $f_1 = \\frac{v}{\\lambda} = \\frac{320\\text{ m/s}}{1{,}60\\text{ m}} = 200\\text{ Hz}$." },
+                { level: "Thông hiểu", q: "Đo tốc độ âm bằng ống trụ với loa $f = 500\\text{ Hz}$, hai vị trí liên tiếp nghe âm to nhất cách nhau $d = 34{,}0\\text{ cm}$. Tính $\\lambda$ và $v$.", sol: "<strong>Giải:</strong> $\\lambda = 2d = 0{,}680\\text{ m} \\Rightarrow v = \\lambda f = (0{,}680\\text{ m})(500\\text{ Hz}) = 340\\text{ m/s}$." },
+                { level: "Vận dụng cao", q: "Sóng dừng trên dây có bước sóng $\\lambda = 24\\text{ cm}$, biên độ tại bụng sóng là $A_{\\text{bụng}} = 4{,}0\\text{ cm}$. Tính biên độ dao động của điểm $M$ cách nút gần nhất $d = 2{,}0\\text{ cm}$ và khoảng cách ngắn nhất giữa hai điểm có cùng biên độ $2{,}0\\text{ cm}$.", sol: "<strong>Giải:</strong> $A_M = A_{\\text{bụng}}\\left|\\sin\\left(\\frac{2\\pi d}{\\lambda}\\right)\\right| = 4{,}0\\sin\\left(\\frac{4\\pi}{24}\\right) = 4{,}0\\sin\\left(\\frac{\\pi}{6}\\right) = 2{,}0\\text{ cm}$.<br>Hai điểm biên độ $2{,}0\\text{ cm}$ gần nhau nhất đối xứng qua một nút sóng (mỗi điểm cách nút $2{,}0\\text{ cm}$), nên cách nhau $2 \\cdot 2{,}0 = 4{,}0\\text{ cm}$." }
+              ]
+            }
+          ],
+          errors: [
+            "Khoảng cách giữa $N$ vân sáng liên tiếp là $(N-1)i$, không phải $Ni$.",
+            "Nhầm tốc độ truyền sóng $v$ với tốc độ dao động cực đại của phần tử $\\omega A$.",
+            "Nhầm khoảng cách nút–bụng liên tiếp ($\\lambda/4$) với nút–nút liên tiếp ($\\lambda/2$)."
+          ],
+          summary: "Sóng lan truyền pha và năng lượng theo λ = vT = v/f, thể hiện đặc trưng sóng qua hiện tượng giao thoa và sóng dừng."
+        },
+        {
+          id: "ch3",
+          short: "Chương 3 · Điện trường",
+          title: "Chương 3. Điện trường (Bài 16 – Bài 21)",
+          idea: "Giải thích tương tác tĩnh điện qua trường lực (điện trường), định lượng điện trường bằng vectơ cường độ điện trường E (mặt lực) và điện thế V (mặt năng lượng), ứng dụng vào chuyển động hạt mang điện và tụ điện.",
+          lessons: [
+            {
+              id: "b16",
+              short: "Bài 16. Định luật Coulomb",
+              title: "Bài 16. Lực tương tác giữa hai điện tích · Định luật Coulomb",
+              concepts: [
+                { name: "Điện tích điểm (Point Charge) & Định luật Coulomb", sym: "q, F", unit: "C; N", vec: "Đại số / Vectơ", dim: "[IT]; [MLT⁻²]", def: "Vật tích điện có kích thước nhỏ hơn rất nhiều khoảng cách xét. Lực tương tác dọc đường nối 2 điện tích, tỉ lệ thuận |q₁q₂| và tỉ lệ nghịch r².", meaning: "Định luật cơ bản của tĩnh điện học (ứng dụng sơn tĩnh điện, lọc bụi không khí).", analogy: "Hạt sơn dương bị hút dính chặt vào vật cần sơn mang điện âm.", confuse: "Dấu của q chỉ quyết định hút/đẩy; độ lớn lực luôn lấy trị tuyệt đối |q₁q₂|.", quick: "Electron q = -1,6·10⁻¹⁹ C; k = 1/(4πε₀) ≈ 9·10⁹ N·m²/C²." }
+              ],
+              formulas: [
+                { name: "Định luật Coulomb (chân không / không khí)", raw: "F = \\frac{|q_1 q_2|}{4\\pi\\varepsilon_0 r^2} = k\\frac{|q_1 q_2|}{r^2}", unit: "N", cond: "Điện tích điểm đứng yên trong chân không/không khí.", dim: "[MLT⁻²]", level: "basic" },
+                { name: "Định luật Coulomb trong điện môi đồng chất", raw: "F = \\frac{k|q_1 q_2|}{\\varepsilon r^2}", unit: "N", cond: "Điện môi đồng chất vô hạn hằng số điện môi ε.", dim: "[MLT⁻²]", level: "advanced", sup: true }
+              ],
+              examples: [
+                { level: "Thông hiểu", q: "Tính lực điện tương tác giữa electron và proton trong nguyên tử hiđrô, biết khoảng cách $r = 5{,}0\\cdot 10^{-11}\\text{ m}$ và $|q_e| = q_p = 1{,}6\\cdot 10^{-19}\\text{ C}$ (lấy $k = 9\\cdot 10^9\\text{ N}\\cdot\\text{m}^2/\\text{C}^2$).", sol: "<strong>Giải:</strong> $F = k\\frac{|q_e q_p|}{r^2} = (9\\cdot 10^9)\\frac{(1{,}6\\cdot 10^{-19})^2}{(5{,}0\\cdot 10^{-11})^2} \\approx 9{,}2\\cdot 10^{-8}\\text{ N}$ (lực hút tĩnh điện)." },
+                { level: "Thông hiểu", q: "Hai quả cầu nhỏ tích điện cùng độ lớn $9{,}45\\cdot 10^{-7}\\text{ C}$ đặt cách nhau $10\\text{ cm}$ trong không khí. Tính lực $F$; nếu tăng khoảng cách lên $20\\text{ cm}$ thì $F$ bằng bao nhiêu?", sol: "<strong>Giải:</strong> $F = 9\\cdot 10^9\\frac{(9{,}45\\cdot 10^{-7})^2}{0{,}10^2} \\approx 0{,}80\\text{ N}$. Khi $r$ tăng 2 lần thì $F$ giảm 4 lần còn $0{,}20\\text{ N}$." },
+                { level: "Vận dụng cao", q: "Hai điện tích điểm $q_1 = +4{,}0\\ \\mu\\text{C}$ và $q_2 = +9{,}0\\ \\mu\\text{C}$ đặt cố định tại $A, B$ cách nhau $10\\text{ cm}$ trong không khí. Phải đặt điện tích $q_3$ ở đâu để lực điện tổng hợp tác dụng lên $q_3$ bằng $0$?", sol: "<strong>Giải:</strong> Vì $q_1, q_2$ cùng dấu nên điểm cân bằng $M$ nằm <strong>trong</strong> đoạn $AB$. Gọi $MA = x\\ (\\text{cm}) \\Rightarrow MB = 10 - x$.<br>Điều kiện $F_{13} = F_{23} \\Leftrightarrow \\frac{|q_1|}{x^2} = \\frac{|q_2|}{(10-x)^2} \\Rightarrow \\frac{2}{x} = \\frac{3}{10-x} \\Rightarrow x = 4{,}0\\text{ cm}$.<br><strong>Đáp số:</strong> Đặt $q_3$ trên đoạn $AB$, cách $A$ $4{,}0\\text{ cm}$ và cách $B$ $6{,}0\\text{ cm}$." }
+              ]
+            },
+            {
+              id: "b17",
+              short: "Bài 17. Khái niệm điện trường",
+              title: "Bài 17. Khái niệm điện trường · Cường độ điện trường · Điện phổ",
+              concepts: [
+                { name: "Điện trường, Cường độ điện trường (E) & Điện phổ", sym: "E", unit: "V/m (N/C)", vec: "Vectơ", dim: "[MLT⁻³I⁻¹]", def: "Điện trường là dạng vật chất bao quanh điện tích và truyền tương tác điện. Vectơ cường độ điện trường E = F/q đặc trưng độ mạnh yếu về lực tại một điểm; đường sức xuất phát từ điện tích dương, kết thúc ở điện tích âm.", meaning: "E không phụ thuộc điện tích thử q; điện trường hệ điện tích tuân theo nguyên lí chồng chất vectơ.", analogy: "Hạt mạt cưa trong dầu xếp dọc theo đường sức tạo nên điện phổ.", confuse: "Khi q < 0 (electron), lực F ngược chiều với E.", quick: "Sát bề mặt Trái Đất có điện trường hướng thẳng đứng xuống dưới, E ≈ 100–200 V/m." }
+              ],
+              formulas: [
+                { name: "Cường độ điện trường & Nguyên lí chồng chất", raw: "\\vec{E} = \\frac{\\vec{F}}{q};\\qquad E = \\frac{|Q|}{4\\pi\\varepsilon_0 r^2};\\qquad \\vec{E} = \\vec{E}_1 + \\vec{E}_2 + \\dots", unit: "V/m", cond: "Đúng cho điện tích điểm và bên ngoài quả cầu tích điện đều.", dim: "[MLT⁻³I⁻¹]", level: "basic" }
+              ],
+              examples: [
+                { level: "Nhận biết", q: "Một hạt bụi mịn PM2.5 mang điện tích $q = +3{,}2\\cdot 10^{-19}\\text{ C}$ nằm trong điện trường sát mặt đất có $E = 150\\text{ V/m}$ hướng thẳng đứng xuống dưới. Xác định phương, chiều và độ lớn lực điện tác dụng lên hạt bụi.", sol: "<strong>Giải:</strong> Vì $q > 0$ nên $\\vec{F}$ cùng phương, cùng chiều $\\vec{E}$ (thẳng đứng hướng xuống).<br>Độ lớn: $F = qE = (3{,}2\\cdot 10^{-19}\\text{ C})(150\\text{ V/m}) = 4{,}8\\cdot 10^{-17}\\text{ N}$." },
+                { level: "Thông hiểu", q: "Hai điện tích $q_1 = +4{,}0\\ \\mu\\text{C},\\ q_2 = -4{,}0\\ \\mu\\text{C}$ đặt tại $A, B$ cách nhau $20\\text{ cm}$ trong không khí. Tính $E$ tại trung điểm $O$ của $AB$.", sol: "<strong>Giải:</strong> Tại $O$, $\\vec{E}_1$ và $\\vec{E}_2$ cùng hướng $A \\to B$ với $E_1 = E_2 = 9\\cdot 10^9\\frac{4\\cdot 10^{-6}}{0{,}10^2} = 3{,}6\\cdot 10^6\\text{ V/m} \\Rightarrow E_O = 7{,}2\\cdot 10^6\\text{ V/m}$." },
+                { level: "Vận dụng cao", q: "Tam giác $ABC$ vuông tại $A$ có $AB = 3{,}0\\text{ cm},\\ AC = 4{,}0\\text{ cm}$. Đặt $Q_1 = +4{,}5\\cdot 10^{-8}\\text{ C}$ tại $B$ và $Q_2 = +8{,}0\\cdot 10^{-8}\\text{ C}$ tại $C$ trong không khí. Tính độ lớn cường độ điện trường tổng hợp tại $A$.", sol: "<strong>Giải:</strong> $E_1 = 9\\cdot 10^9\\frac{4{,}5\\cdot 10^{-8}}{0{,}03^2} = 4{,}5\\cdot 10^5\\text{ V/m}$; $E_2 = 9\\cdot 10^9\\frac{8{,}0\\cdot 10^{-8}}{0{,}04^2} = 4{,}5\\cdot 10^5\\text{ V/m}$.<br>Vì $\\vec{E}_1 \\perp \\vec{E}_2$ tại $A$ nên $E_A = \\sqrt{E_1^2 + E_2^2} = 4{,}5\\sqrt{2}\\cdot 10^5 \\approx 6{,}36\\cdot 10^5\\text{ V/m}$." }
+              ]
+            },
+            {
+              id: "b18",
+              short: "Bài 18. Điện trường đều",
+              title: "Bài 18. Điện trường đều · Chuyển động của điện tích trong điện trường đều",
+              concepts: [
+                { name: "Điện trường đều (Uniform Electric Field)", sym: "E = U/d", unit: "V/m", vec: "Vectơ không đổi", dim: "[MLT⁻³I⁻¹]", def: "Điện trường có vectơ E bằng nhau về độ lớn, cùng phương và chiều tại mọi điểm (đường sức song song cách đều), tạo ra giữa hai bản phẳng song song tích điện trái dấu.", meaning: "Hạt mang điện bay vuông góc đường sức chuyển động theo quỹ đạo parabol giống ném ngang (ứng dụng ống phóng tia điện tử, máy lọc ion âm).", analogy: "Trọng trường đều gần mặt đất làm vật ném ngang bay theo đường parabol.", confuse: "Electron mang điện âm nên bị bẻ cong về phía bản DƯƠNG.", quick: "Hai bản cách 20 cm, U = 1000 V ⇒ E = 5000 V/m." }
+              ],
+              formulas: [
+                { name: "Cường độ điện trường đều giữa 2 bản phẳng", raw: "E = \\frac{U}{d}", unit: "V/m", cond: "Kích thước bản rất lớn so với khoảng cách d giữa hai bản.", dim: "[V/m]", level: "basic" },
+                { name: "Quỹ đạo & Góc lệch hạt mang điện bay vuông góc E", raw: "y = \\frac{qE}{2mv_0^2}x^2;\\qquad \\tan\\theta = \\frac{|q|Ul}{mdv_0^2}", unit: "m; [1]", cond: "Bỏ qua trọng lực, hạt bay vuông góc đường sức điện trường đều.", dim: "[L]", level: "advanced" }
+              ],
+              examples: [
+                { level: "Thông hiểu", q: "Giữa hai cực của ống phóng tia X cách nhau $d = 2{,}0\\text{ cm}$ có điện trường đều với hiệu điện thế $U = 120\\text{ kV}$. Tính cường độ điện trường $E$ và lực điện tác dụng lên mỗi electron.", sol: "<strong>Tóm tắt (SI):</strong> $d = 0{,}020\\text{ m}$; $U = 1{,}2\\cdot 10^5\\text{ V}$.<br><strong>Giải:</strong> $E = \\frac{U}{d} = \\frac{1{,}2\\cdot 10^5}{0{,}020} = 6{,}0\\cdot 10^6\\text{ V/m}$.<br>Lực điện: $F = |e|E = (1{,}6\\cdot 10^{-19}\\text{ C})(6{,}0\\cdot 10^6\\text{ V/m}) = 9{,}6\\cdot 10^{-13}\\text{ N}$." },
+                { level: "Vận dụng", q: "Hạt bụi khối lượng $m = 0{,}010\\text{ g}$ nằm lơ lửng cân bằng giữa hai bản phẳng nằm ngang cách nhau $d = 2{,}0\\text{ cm}$ (bản trên dương, bản dưới âm), $U = 400\\text{ V}$, $g = 10\\text{ m/s}^2$. Xác định dấu và độ lớn điện tích $q$ của hạt bụi.", sol: "<strong>Giải:</strong> $\\vec{E}$ hướng xuống với $E = \\frac{400}{0{,}020} = 20\\,000\\text{ V/m}$. Để cân bằng với trọng lực $\\vec{P}$ hướng xuống, lực điện $\\vec{F}$ phải hướng lên (ngược chiều $\\vec{E}$) $\\Rightarrow q < 0$.<br>$|q|E = mg \\Rightarrow |q| = \\frac{(10^{-5}\\text{ kg})(10\\text{ m/s}^2)}{20\\,000\\text{ V/m}} = 5{,}0\\cdot 10^{-9}\\text{ C} \\Rightarrow q = -5{,}0\\text{ nC}$." },
+                { level: "Vận dụng cao", q: "Electron ($q=-1{,}6\\cdot 10^{-19}\\text{ C},\\ m=9{,}1\\cdot 10^{-31}\\text{ kg}$) bay vào chính giữa tụ phẳng dài $l=5{,}0\\text{ cm}$, $d=2{,}0\\text{ cm}$, $U=100\\text{ V}$ với $v_0=2{,}0\\cdot 10^7\\text{ m/s}$ song song bản. Tính độ lệch $y$ khi vừa ra khỏi tụ.", sol: "<strong>Giải:</strong> $E = 5000\\text{ V/m}$; $a_y = \\frac{|q|E}{m} \\approx 8{,}79\\cdot 10^{14}\\text{ m/s}^2$; $t = l/v_0 = 2{,}5\\cdot 10^{-9}\\text{ s}$.<br>$\\Rightarrow y = \\frac{1}{2}a_y t^2 \\approx 2{,}75\\text{ mm} < d/2 = 10\\text{ mm}$ (electron thoát ra ngoài về phía bản dương)." }
+              ]
+            },
+            {
+              id: "b19_20",
+              short: "Bài 19–20. Thế năng điện & Điện thế",
+              title: "Bài 19 & 20. Thế năng điện · Điện thế · Hiệu điện thế",
+              concepts: [
+                { name: "Công lực điện, Thế năng điện (W_M) & Điện thế (V)", sym: "A_MN, W_M, V, U", unit: "J; V", vec: "Vô hướng / Đại số", dim: "[ML²T⁻²]; [ML²T⁻³I⁻¹]", def: "Công lực điện không phụ thuộc hình dạng đường đi, chỉ phụ thuộc điểm đầu và cuối. Thế năng W_M là khả năng sinh công của điện trường khi đặt q tại M; điện thế V = W_M/q đặc trưng điện trường về thế năng; hiệu điện thế U_MN = V_M - V_N.", meaning: "Vectơ E luôn hướng theo chiều GIẢM của điện thế.", analogy: "Điện thế giống độ cao địa hình (của trường); thế năng phụ thuộc thêm điện tích q đặt lên.", confuse: "V gắn với điện trường, còn W_M = qV gắn với điện tích q.", quick: "Electron đặt tại V = 1000 V có thế năng W = -1,6·10⁻¹⁶ J." }
+              ],
+              formulas: [
+                { name: "Công lực điện, Thế năng & Liên hệ E – V", raw: "A_{MN} = qEd = qU_{MN};\\quad W_M = qEd = qV_M;\\quad E = \\frac{V_M - V_N}{\\overline{MN}}", unit: "J; V/m", cond: "A = qEd dùng cho điện trường đều; A = qU_MN đúng mọi điện trường tĩnh.", dim: "[J]; [V/m]", level: "basic" },
+                { name: "Điện thế của điện tích điểm (mốc ở vô cực)", raw: "V = \\frac{kQ}{r}", unit: "V", cond: "Điện tích điểm Q đặt trong chân không, chọn mốc V(∞) = 0.", dim: "[V]", level: "advanced", sup: true }
+              ],
+              examples: [
+                { level: "Thông hiểu", q: "Điện trường đều sát mặt đất có $E = 120\\text{ V/m}$ hướng thẳng đứng xuống dưới, chọn mặt đất làm mốc điện thế ($V_0 = 0$). Tính điện thế tại điểm $M$ cách mặt đất $5{,}0\\text{ m}$ và thế năng của điện tích $q = +2{,}0\\ \\mu\\text{C}$ đặt tại $M$.", sol: "<strong>Giải:</strong> $V_M = E h = (120\\text{ V/m})(5{,}0\\text{ m}) = 600\\text{ V}$.<br>Thế năng điện: $W_M = q V_M = (2{,}0\\cdot 10^{-6}\\text{ C})(600\\text{ V}) = 1{,}2\\cdot 10^{-3}\\text{ J} = 1{,}2\\text{ mJ}$." },
+                { level: "Thông hiểu", q: "Tế bào quang điện có $U_{AK} = 45\\text{ V}$. Tính công của điện trường khi electron dịch chuyển từ catôt (K) tới anôt (A).", sol: "<strong>Giải:</strong> $A_{KA} = q U_{KA} = (-1{,}6\\cdot 10^{-19}\\text{ C})(-45\\text{ V}) = +7{,}2\\cdot 10^{-18}\\text{ J}$ (công phát động làm tăng tốc electron)." },
+                { level: "Vận dụng cao", q: "Một electron bắt đầu chuyển động không vận tốc đầu từ catôt sang anôt trong ống chân không dưới hiệu điện thế $U_{AK} = 455\\text{ V}$. Bỏ qua trọng lực, tính tốc độ của electron khi vừa đập vào anôt ($m_e = 9{,}1\\cdot 10^{-31}\\text{ kg}$).", sol: "<strong>Giải:</strong> Theo định lí động năng: $\\frac{1}{2}m_e v^2 - 0 = A_{KA} = |e| U_{AK}$.<br>$v = \\sqrt{\\frac{2|e|U_{AK}}{m_e}} = \\sqrt{\\frac{2(1{,}6\\cdot 10^{-19})(455)}{9{,}1\\cdot 10^{-31}}} = \\sqrt{1{,}6\\cdot 10^{14}} \\approx 1{,}26\\cdot 10^7\\text{ m/s}$." }
+              ]
+            },
+            {
+              id: "b21",
+              short: "Bài 21. Tụ điện",
+              title: "Bài 21. Tụ điện · Điện dung · Ghép tụ & Năng lượng tụ điện",
+              concepts: [
+                { name: "Tụ điện (Capacitor) & Điện dung (C)", sym: "C, Q, W", unit: "F; C; J", vec: "Vô hướng", dim: "[M⁻¹L⁻²T⁴I²]", def: "Gồm hai vật dẫn ngăn cách bằng lớp điện môi, dùng để tích điện, phóng điện và tích trữ năng lượng điện trường. Điện dung C = Q/U đặc trưng khả năng tích điện.", meaning: "Trên vỏ tụ ghi C và hiệu điện thế tối đa U_max (vượt quá sẽ đánh thủng điện môi).", analogy: "Bể nước: C là diện tích đáy, U là mực nước, Q là lượng nước.", confuse: "C không phụ thuộc Q, U; ghép tụ song song cộng thẳng C = C₁ + C₂ (ngược với điện trở).", quick: "Tụ 2 µF – 200 V tích tối đa Q = 4·10⁻⁴ C, năng lượng 0,04 J." }
+              ],
+              formulas: [
+                { name: "Điện dung, Ghép tụ & Năng lượng tụ điện", raw: "Q = CU;\\quad W = \\frac{QU}{2} = \\frac{Q^2}{2C} = \\frac{CU^2}{2};\\quad \\frac{1}{C_{nt}}=\\sum\\frac{1}{C_i};\\quad C_{ss}=\\sum C_i", unit: "C; J; F", cond: "U ≤ U_max cho phép trên vỏ tụ.", dim: "[J]; [F]", level: "basic" },
+                { name: "Điện dung tụ phẳng & Nối hai tụ đã tích điện", raw: "C = \\frac{\\varepsilon \\varepsilon_0 S}{d};\\qquad U_{\\text{chung}} = \\frac{Q_1 \\pm Q_2}{C_1 + C_2}", unit: "F; V", cond: "Bảo toàn điện tích cô lập khi nối 2 bản cùng dấu (+) hoặc trái dấu (-).", dim: "[F]; [V]", level: "advanced", sup: true }
+              ],
+              examples: [
+                { level: "Nhận biết", q: "Một tụ điện trên vỏ ghi $20\\ \\mu\\text{F} - 250\\text{ V}$. Tính điện tích tối đa $Q_{\\max}$ và năng lượng tối đa $W_{\\max}$ mà tụ có thể tích trữ.", sol: "<strong>Giải:</strong> $Q_{\\max} = C U_{\\max} = (20\\cdot 10^{-6}\\text{ F})(250\\text{ V}) = 5{,}0\\cdot 10^{-3}\\text{ C} = 5{,}0\\text{ mC}$.<br>Năng lượng tối đa: $W_{\\max} = \\frac{1}{2}Q_{\\max}U_{\\max} = \\frac{1}{2}(5{,}0\\cdot 10^{-3})(250) = 0{,}625\\text{ J}$." },
+                { level: "Thông hiểu", q: "Ba tụ $C_1 = 2\\ \\mu\\text{F},\\ C_2 = 3\\ \\mu\\text{F},\\ C_3 = 4\\ \\mu\\text{F}$. Tính điện dung tương đương khi ghép nối tiếp và khi ghép song song.", sol: "<strong>Giải:</strong> Nối tiếp: $\\frac{1}{C_{nt}} = \\frac{1}{2}+\\frac{1}{3}+\\frac{1}{4} = \\frac{13}{12} \\Rightarrow C_{nt} = \\frac{12}{13}\\ \\mu\\text{F} \\approx 0{,}92\\ \\mu\\text{F}$.<br>Song song: $C_{ss} = 2 + 3 + 4 = 9\\ \\mu\\text{F}$ (tích điện tốt hơn ghép nối tiếp)." },
+                { level: "Vận dụng cao", q: "Tụ $C_1 = 2{,}0\\ \\mu\\text{F}$ tích điện đến $U_1 = 100\\text{ V}$ rồi ngắt khỏi nguồn. Sau đó nối song song hai bản của $C_1$ với tụ $C_2 = 3{,}0\\ \\mu\\text{F}$ chưa tích điện. Tính hiệu điện thế chung của bộ tụ và nhiệt lượng tỏa ra trên dây nối.", sol: "<strong>Giải:</strong> $Q_1 = C_1 U_1 = 2{,}0\\cdot 10^{-4}\\text{ C}$; $W_{\\text{trước}} = \\frac{1}{2}C_1 U_1^2 = 0{,}010\\text{ J}$.<br>Bảo toàn điện tích: $U_{\\text{chung}} = \\frac{Q_1}{C_1 + C_2} = \\frac{2{,}0\\cdot 10^{-4}}{5{,}0\\cdot 10^{-6}} = 40\\text{ V}$.<br>$W_{\\text{sau}} = \\frac{1}{2}(C_1+C_2)U_{\\text{chung}}^2 = 0{,}004\\text{ J} \\Rightarrow Q_{\\text{nhiệt}} = W_{\\text{trước}} - W_{\\text{sau}} = 0{,}006\\text{ J} = 6{,}0\\text{ mJ}$." }
+              ]
+            }
+          ],
+          errors: [
+            "Nhầm công thức ghép tụ với ghép điện trở (tụ ghép song song cộng thẳng $C = C_1 + C_2$).",
+            "Không vẽ vectơ $\\vec{E}_1, \\vec{E}_2$ trước khi tổng hợp điện trường.",
+            "Quên dấu đại số của $q$ và hình chiếu $d$ trong $A_{MN} = qEd$."
+          ],
+          summary: "Điện trường đặc trưng về lực bởi E, về năng lượng bởi điện thế V, và được ứng dụng trực tiếp để lái hạt mang điện cũng như tích trữ năng lượng trong tụ điện."
+        },
+        {
+          id: "ch4",
+          short: "Chương 4 · Dòng điện",
+          title: "Chương 4. Dòng điện · Mạch điện (Bài 22 – Bài 26)",
+          idea: "Chuyển từ tĩnh điện sang dòng dịch chuyển có hướng của hạt mang điện trong mạch kín: biểu thức vi mô I = Snve, định luật Ohm cho vật dẫn và toàn mạch có nguồn điện (E, r), cùng quy luật năng lượng – công suất điện.",
+          lessons: [
+            {
+              id: "b22",
+              short: "Bài 22. Cường độ dòng điện",
+              title: "Bài 22. Cường độ dòng điện · Tốc độ dịch chuyển có hướng",
+              concepts: [
+                { name: "Cường độ dòng điện (Electric Current)", sym: "I, v", unit: "A; m/s", vec: "Vô hướng", dim: "[I]", def: "Độ lớn điện lượng chuyển qua tiết diện thẳng của dây dẫn trong 1 đơn vị thời gian (I = Δq/Δt). Chiều quy ước từ cực dương sang cực âm (ngược chiều dịch chuyển của electron trong kim loại).", meaning: "Liên hệ giữa đại lượng vĩ mô I và chuyển động vi mô của electron tự do qua I = Snve.", analogy: "Lưu lượng nước chảy qua mặt cắt ống trong 1 giây.", confuse: "Tốc độ trôi electron (~0,1 mm/s) rất nhỏ so với tốc độ truyền điện trường (~c).", quick: "Sạc dự phòng 10 000 mAh chứa điện lượng 36 000 C." }
+              ],
+              formulas: [
+                { name: "Cường độ dòng điện & Biểu thức vi mô kim loại", raw: "I = \\frac{\\Delta q}{\\Delta t};\\qquad I = S n v e", unit: "A", cond: "Dây dẫn kim loại tiết diện S (m²), mật độ electron n (m⁻³), tốc độ trôi v (m/s).", dim: "[I]", level: "basic" }
+              ],
+              examples: [
+                { level: "Nhận biết", q: "Sạc dự phòng ghi dung lượng $10\\,000\\text{ mAh}$ phóng dòng điện ổn định $I = 2{,}0\\text{ A}$. Tính tổng điện lượng (ra đơn vị $\\text{C}$) và thời gian phóng hết điện.", sol: "<strong>Giải:</strong> $q = 10\\,000\\text{ mAh} = 10\\text{ A}\\cdot 3600\\text{ s} = 36\\,000\\text{ C}$.<br>Thời gian phóng điện: $t = \\frac{10\\text{ Ah}}{2{,}0\\text{ A}} = 5{,}0\\text{ giờ}$." },
+                { level: "Thông hiểu", q: "Dây đồng tiết diện $S = 1{,}0\\text{ mm}^2$, mật độ electron $n = 8{,}5\\cdot 10^{28}\\text{ m}^{-3}$ có dòng $I = 3{,}4\\text{ A}$. Tính tốc độ dịch chuyển có hướng $v$ của electron.", sol: "<strong>Giải:</strong> $S = 10^{-6}\\text{ m}^2 \\Rightarrow v = \\frac{3{,}4}{(10^{-6})(8{,}5\\cdot 10^{28})(1{,}6\\cdot 10^{-19})} = 2{,}5\\cdot 10^{-4}\\text{ m/s} = 0{,}25\\text{ mm/s}$." },
+                { level: "Vận dụng", q: "Chùm electron trong ống phóng tia điện tử tạo dòng $I = 3{,}2\\text{ mA}$, tiết diện $S = 2{,}0\\text{ mm}^2$, mỗi electron bay với tốc độ $v = 1{,}0\\cdot 10^7\\text{ m/s}$. Tính số electron đập vào màn mỗi giây và mật độ electron $n$ trong chùm tia.", sol: "<strong>Giải:</strong> Số electron mỗi giây: $N = \\frac{I\\cdot 1\\text{ s}}{e} = \\frac{3{,}2\\cdot 10^{-3}}{1{,}6\\cdot 10^{-19}} = 2{,}0\\cdot 10^{16}\\text{ hạt/s}$.<br>Mật độ electron: $n = \\frac{I}{Sve} = \\frac{3{,}2\\cdot 10^{-3}}{(2{,}0\\cdot 10^{-6})(1{,}0\\cdot 10^7)(1{,}6\\cdot 10^{-19})} = 1{,}0\\cdot 10^{15}\\text{ m}^{-3}$." }
+              ]
+            },
+            {
+              id: "b23",
+              short: "Bài 23. Điện trở & Định luật Ohm",
+              title: "Bài 23. Điện trở · Định luật Ohm · Nhiệt điện trở & Siêu dẫn",
+              concepts: [
+                { name: "Điện trở, Đường đặc trưng I–U & Ảnh hưởng nhiệt độ", sym: "R, ρ, α", unit: "Ω; Ω·m; K⁻¹", vec: "Vô hướng", dim: "[ML²T⁻³I⁻²]", def: "R = U/I đặc trưng mức độ cản trở dòng điện do mất trật tự mạng tinh thể kim loại. Đồ thị I–U của điện trở thuần là đường thẳng qua gốc tọa độ có độ dốc k = 1/R; ở đèn sợi đốt, nhiệt độ tăng làm R tăng nên đường I–U cong xuống.", meaning: "Định luật Ohm: I tỉ lệ thuận U, tỉ lệ nghịch R đối với vật dẫn kim loại ở nhiệt độ không đổi.", analogy: "Độ hẹp và độ nhám ống nước cản trở dòng chảy.", confuse: "Nhiệt điện trở NTC (t tăng → R giảm) khác PTC và kim loại (t tăng → R tăng).", quick: "Hiện tượng siêu dẫn: dưới nhiệt độ tới hạn T_c (Hg: 4,15 K; Nb₃Ge: 23 K), điện trở giảm đột ngột về 0." }
+              ],
+              formulas: [
+                { name: "Định luật Ohm, Điện trở dây dẫn & Phụ thuộc nhiệt độ", raw: "I = \\frac{U}{R};\\qquad R = \\frac{\\rho l}{S};\\qquad R = R_0[1 + \\alpha(t - t_0)]", unit: "A; Ω", cond: "Vật dẫn kim loại; điện trở phụ thuộc nhiệt độ gần đúng bậc nhất.", dim: "[I]; [Ω]", level: "basic" }
+              ],
+              examples: [
+                { level: "Thông hiểu", q: "Dây đồng dài $l = 100\\text{ m}$, tiết diện $S = 0{,}50\\text{ mm}^2$, điện trở suất $\\rho = 1{,}69\\cdot 10^{-8}\\ \\Omega\\cdot\\text{m}$. Tính điện trở của dây và cường độ dòng điện qua dây khi đặt hiệu điện thế $U = 6{,}76\\text{ V}$.", sol: "<strong>Giải:</strong> $R = \\frac{\\rho l}{S} = \\frac{(1{,}69\\cdot 10^{-8})(100)}{0{,}50\\cdot 10^{-6}} = 3{,}38\\ \\Omega$.<br>Cường độ dòng điện: $I = \\frac{U}{R} = \\frac{6{,}76\\text{ V}}{3{,}38\\ \\Omega} = 2{,}0\\text{ A}$." },
+                { level: "Thông hiểu", q: "Dây đồng có điện trở $R_0 = 10\\ \\Omega$ ở $20^\\circ\\text{C}$, hệ số nhiệt điện trở $\\alpha = 4{,}3\\cdot 10^{-3}\\text{ K}^{-1}$. Tính điện trở của dây khi nóng lên đến $120^\\circ\\text{C}$.", sol: "<strong>Giải:</strong> $R = R_0[1 + \\alpha(t - t_0)] = 10[1 + 4{,}3\\cdot 10^{-3}(120 - 20)] = 10(1 + 0{,}43) = 14{,}3\\ \\Omega$." },
+                { level: "Vận dụng cao", q: "Bóng đèn dây tóc vonfam ($\\alpha = 4{,}5\\cdot 10^{-3}\\text{ K}^{-1}$) ở $20^\\circ\\text{C}$ có điện trở $R_0 = 40\\ \\Omega$. Khi sáng bình thường ở $U = 220\\text{ V}$ thì dòng điện qua đèn là $I = 0{,}50\\text{ A}$. Tính nhiệt độ dây tóc khi sáng bình thường.", sol: "<strong>Giải:</strong> Điện trở khi sáng: $R = \\frac{U}{I} = \\frac{220}{0{,}50} = 440\\ \\Omega$.<br>Từ $R = R_0[1 + \\alpha(t - 20)] \\Rightarrow 440 = 40[1 + 4{,}5\\cdot 10^{-3}(t - 20)] \\Rightarrow t - 20 = \\frac{10}{4{,}5\\cdot 10^{-3}} \\approx 2222^\\circ\\text{C} \\Rightarrow t \\approx 2242^\\circ\\text{C}$." }
+              ]
+            },
+            {
+              id: "b24",
+              short: "Bài 24. Nguồn điện & ĐL Ohm toàn mạch",
+              title: "Bài 24. Nguồn điện · Suất điện động · Điện trở trong",
+              concepts: [
+                { name: "Nguồn điện, Suất điện động (E) & Điện trở trong (r)", sym: "E, r, U", unit: "V; Ω", vec: "Vô hướng", dim: "[ML²T⁻³I⁻¹]", def: "Nguồn điện tạo và duy trì hiệu điện thế nhờ lực lạ bên trong tách electron. Suất điện động E = A/q đo khả năng thực hiện công của nguồn (bằng U hai cực khi mạch hở). Bản thân nguồn có điện trở trong r.", meaning: "Khi mạch kín, hiệu điện thế hai cực nguồn U = E - Ir luôn nhỏ hơn E do độ giảm thế Ir bên trong nguồn.", analogy: "Máy bơm đẩy nước lên cao để duy trì dòng chảy tuần hoàn.", confuse: "Hiện tượng đoản mạch xảy ra khi R ngoài ≈ 0 (chập dây), làm dòng I tăng cực lớn gây cháy nổ.", quick: "Nguồn E = 12 V, r = 0,6 Ω nối mạch ngoài R = 5,4 Ω ⇒ I = 2 A, U = 10,8 V." }
+              ],
+              formulas: [
+                { name: "Suất điện động, Định luật Ohm toàn mạch & Hiệu điện thế ngoài", raw: "\\mathcal{E} = \\frac{A}{q};\\qquad I = \\frac{\\mathcal{E}}{R + r};\\qquad U = \\mathcal{E} - I r", unit: "V; A; V", cond: "Mạch kín gồm nguồn (E, r) và mạch ngoài thuần trở R.", dim: "[V]; [A]", level: "basic" },
+                { name: "Ghép nguồn nối tiếp & song song", raw: "\\text{Nối tiếp: } \\mathcal{E}_b=\\sum\\mathcal{E}_i,\\ r_b=\\sum r_i;\\qquad \\text{Song song } n \\text{ nguồn giống nhau: } \\mathcal{E}_b=\\mathcal{E},\\ r_b=\\frac{r}{n}", unit: "V; Ω", cond: "Ghép cùng cực (nối tiếp) hoặc giống hệt nhau (song song).", dim: "[V]; [Ω]", level: "advanced", sup: true }
+              ],
+              examples: [
+                { level: "Nhận biết", q: "Một pin điện hóa có suất điện động $\\mathcal{E} = 1{,}5\\text{ V}$, điện trở trong $r = 0{,}5\\ \\Omega$ thực hiện công lực lạ $A = 9{,}0\\text{ J}$. Tính điện lượng $q$ đã dịch chuyển bên trong pin và cường độ dòng điện nếu pin bị đoản mạch.", sol: "<strong>Giải:</strong> $q = \\frac{A}{\\mathcal{E}} = \\frac{9{,}0\\text{ J}}{1{,}5\\text{ V}} = 6{,}0\\text{ C}$.<br>Khi đoản mạch ($R_N = 0$): $I_{\\text{đm}} = \\frac{\\mathcal{E}}{r} = \\frac{1{,}5\\text{ V}}{0{,}5\\ \\Omega} = 3{,}0\\text{ A}$." },
+                { level: "Thông hiểu", q: "Nguồn $\\mathcal{E} = 12\\text{ V},\\ r = 0{,}6\\ \\Omega$ mắc với mạch ngoài gồm $R_1 = 3\\ \\Omega$ nối tiếp cụm ($R_2 = 4\\ \\Omega \\parallel R_3 = 6\\ \\Omega$). Tính điện trở mạch ngoài, cường độ dòng chính $I$ và $U$ hai cực nguồn.", sol: "<strong>Giải:</strong> $R_{23} = \\frac{4\\cdot 6}{4+6} = 2{,}4\\ \\Omega \\Rightarrow R_{AB} = 3 + 2{,}4 = 5{,}4\\ \\Omega$.<br>$I = \\frac{\\mathcal{E}}{R_{AB}+r} = \\frac{12}{5{,}4+0{,}6} = 2{,}0\\text{ A}$; $U = \\mathcal{E} - Ir = 12 - 2{,}0(0{,}6) = 10{,}8\\text{ V}$." },
+                { level: "Vận dụng cao", q: "Ghép $6$ pin giống nhau ($\\mathcal{E} = 1{,}5\\text{ V},\\ r = 0{,}6\\ \\Omega$) thành $2$ dãy song song, mỗi dãy $3$ pin nối tiếp, cấp điện cho điện trở ngoài $R = 3{,}6\\ \\Omega$. Tính $\\mathcal{E}_b,\\ r_b$ và dòng điện mạch chính $I$.", sol: "<strong>Giải:</strong> Mỗi dãy 3 pin nối tiếp có $\\mathcal{E}_d = 3(1{,}5) = 4{,}5\\text{ V}$ và $r_d = 3(0{,}6) = 1{,}8\\ \\Omega$.<br>Ghép song song 2 dãy giống nhau: $\\mathcal{E}_b = 4{,}5\\text{ V}$; $r_b = \\frac{1{,}8}{2} = 0{,}9\\ \\Omega$.<br>Dòng điện mạch chính: $I = \\frac{\\mathcal{E}_b}{R + r_b} = \\frac{4{,}5}{3{,}6 + 0{,}9} = 1{,}0\\text{ A}$." }
+              ]
+            },
+            {
+              id: "b25",
+              short: "Bài 25. Năng lượng & Công suất điện",
+              title: "Bài 25. Năng lượng điện · Công suất điện · Hóa đơn điện",
+              concepts: [
+                { name: "Năng lượng điện (W, A) & Công suất điện (P)", sym: "A, Q, P", unit: "J; W", vec: "Vô hướng", dim: "[ML²T⁻²]; [ML²T⁻³]", def: "Năng lượng điện tiêu thụ của đoạn mạch bằng công lực điện W = A = UIt. Công suất điện P = A/t = UI là năng lượng tiêu thụ trong 1 đơn vị thời gian. Đoạn mạch thuần trở tỏa nhiệt Q = I²Rt = (U²/R)t.", meaning: "Đo bằng công tơ điện theo kW·h (1 kW·h = 3,6·10³ kJ = 1 số điện). Đèn LED chuyển 80% điện năng thành ánh sáng, tiết kiệm hơn hẳn đèn sợi đốt (chỉ 5%).", analogy: "Công suất W là tốc độ tiêu thụ điện mỗi giây; kW·h là tổng lượng điện đã dùng.", confuse: "Số ghi 220 V – 100 W là điện áp và công suất ĐỊNH MỨC (chỉ đạt 100 W khi mắc đúng 220 V).", quick: "Ấm điện 220 V – 1000 W có điện trở R = 220²/1000 = 48,4 Ω." }
+              ],
+              formulas: [
+                { name: "Năng lượng điện, Nhiệt lượng & Công suất điện", raw: "W = A = UIt;\\qquad Q = I^2 R t = \\frac{U^2}{R}t;\\qquad \\mathcal{P} = \\frac{A}{t} = UI = \\frac{U^2}{R}", unit: "J; W", cond: "Q và U²/R áp dụng cho đoạn mạch thuần điện trở R.", dim: "[J]; [W]", level: "basic" },
+                { name: "Cực trị công suất mạch ngoài & Hiệu suất nguồn", raw: "\\mathcal{P}_{N\\max} = \\frac{\\mathcal{E}^2}{4r}\\text{ khi } R_N = r;\\quad R_1 R_2 = r^2\\text{ nếu } \\mathcal{P}(R_1)=\\mathcal{P}(R_2);\\quad H = \\frac{R_N}{R_N+r}", unit: "W; Ω²; %", cond: "Suy từ BĐT Cauchy và Viète cho P_N = E²R_N/(R_N+r)².", dim: "[W]", level: "advanced", sup: true }
+              ],
+              examples: [
+                { level: "Thông hiểu", q: "Thay một bóng đèn sợi đốt $220\\text{ V} - 100\\text{ W}$ bằng đèn LED $220\\text{ V} - 20\\text{ W}$ (cùng độ sáng), thắp $5\\text{ giờ/ngày}$ ở mạng $220\\text{ V}$ trong $30\\text{ ngày}$. Tính tiền điện tiết kiệm mỗi tháng (giá $2\\,000\\text{ đồng/kW}\\cdot\\text{h}$).", sol: "<strong>Giải:</strong> Tổng thời gian $t = 5 \\cdot 30 = 150\\text{ h}$.<br>Điện năng tiết kiệm: $\\Delta A = (0{,}100 - 0{,}020)\\text{ kW} \\cdot 150\\text{ h} = 12\\text{ kW}\\cdot\\text{h}$.<br>Tiền tiết kiệm: $12 \\cdot 2\\,000 = 24\\,000\\text{ đồng/tháng}$." },
+                { level: "Vận dụng", q: "Ấm điện ghi $220\\text{ V} - 1000\\text{ W}$ dùng ở $U = 200\\text{ V}$ đun sôi $2$ lít nước từ $20^\\circ\\text{C}$ ($H = 90\\%$, $c = 4190\\text{ J/kg}\\cdot\\text{K}$). Tính thời gian đun nước.", sol: "<strong>Giải (Ví dụ SGK tr.109):</strong> $Q = mc\\Delta t = 2(4190)(100-20) = 670\\,400\\text{ J}$.<br>Điện năng tiêu thụ: $A = \\frac{Q}{H} = \\frac{670\\,400}{0{,}9} \\approx 744\\,889\\text{ J}$; $R = \\frac{220^2}{1000} = 48{,}4\\ \\Omega$.<br>Thời gian: $t = \\frac{AR}{U^2} = \\frac{744\\,889\\cdot 48{,}4}{200^2} \\approx 901\\text{ s} \\approx 15\\text{ phút}$." },
+                { level: "Vận dụng cao", q: "Nguồn $\\mathcal{E} = 12\\text{ V},\\ r = 2{,}0\\ \\Omega$ mắc biến trở $R$. Tìm $R$ để công suất trên $R$ cực đại, tính $\\mathcal{P}_{\\max}$ và hiệu suất nguồn khi đó.", sol: "<strong>Giải:</strong> Theo BĐT Cauchy, $\\mathcal{P}_R$ đạt cực đại khi $R = r = 2{,}0\\ \\Omega$.<br>$\\mathcal{P}_{\\max} = \\frac{12^2}{4\\cdot 2{,}0} = 18\\text{ W}$; hiệu suất $H = \\frac{R}{R+r} = 50\\%$." },
+                { level: "Vận dụng cao", q: "Nguồn $\\mathcal{E} = 12\\text{ V},\\ r = 2{,}0\\ \\Omega$ mắc biến trở $R$. Biết hai giá trị $R_1 = 1{,}0\\ \\Omega$ và $R_2$ cho cùng một công suất mạch ngoài. Tìm $R_2$ và giá trị công suất đó.", sol: "<strong>Giải:</strong> Áp dụng hệ quả Viète: $R_1 R_2 = r^2 = 2{,}0^2 = 4{,}0 \\Rightarrow R_2 = \\frac{4{,}0}{1{,}0} = 4{,}0\\ \\Omega$.<br>Công suất tiêu thụ: $\\mathcal{P} = \\frac{\\mathcal{E}^2 R_1}{(R_1 + r)^2} = \\frac{12^2 \\cdot 1{,}0}{(1{,}0 + 2{,}0)^2} = 16\\text{ W}$." }
+              ]
+            },
+            {
+              id: "b26",
+              short: "Bài 26. Thực hành đo E và r [Bổ sung]",
+              title: "Bài 26. Thực hành: Đo suất điện động và điện trở trong của pin [Bổ sung]",
+              concepts: [
+                { name: "Phương pháp đồ thị đo (E, r) [Bổ sung]", sym: "U(I)", unit: "V; Ω", vec: "Thực hành", dim: "—", def: "Thay đổi biến trở R để đo nhiều cặp giá trị (I, U) bằng ampe kế và vôn kế, sau đó vẽ đồ thị U theo I (đường thẳng dốc xuống U = E - rI).", meaning: "Giao điểm với trục tung (I = 0) cho giá trị suất điện động E; độ lớn hệ số góc đường thẳng cho điện trở trong r.", analogy: "Đo chiều cao ban đầu và độ dốc của một con dốc thẳng.", confuse: "Vôn kế thực có điện trở hữu hạn gây sai số hệ thống nếu không mắc đúng sơ đồ.", quick: "Từ 2 điểm (I₁, U₁) và (I₂, U₂) trên đường thẳng khớp: r = |(U₂ - U₁)/(I₂ - I₁)|." }
+              ],
+              formulas: [
+                { name: "Phương trình đường thực nghiệm U – I", raw: "U = \\mathcal{E} - r I \\Rightarrow r = \\left|\\frac{\\Delta U}{\\Delta I}\\right|", unit: "V; Ω", cond: "Bỏ qua sai số dụng cụ của ampe kế và vôn kế lí tưởng.", dim: "[V]; [Ω]", level: "basic", sup: true }
+              ],
+              examples: [
+                { level: "Nhận biết", q: "[Bổ sung] Trong thí nghiệm đo $(\\mathcal{E}, r)$ của pin, đường thẳng đồ thị $U(I)$ cắt trục tung tại $U_0 = 3{,}00\\text{ V}$ và cắt trục hoành tại $I_0 = 6{,}00\\text{ A}$. Xác định $\\mathcal{E}$ và $r$.", sol: "<strong>Giải:</strong> Từ $U = \\mathcal{E} - rI$: khi $I = 0 \\Rightarrow \\mathcal{E} = U_0 = 3{,}00\\text{ V}$.<br>Khi $U = 0 \\Rightarrow r = \\frac{\\mathcal{E}}{I_0} = \\frac{3{,}00\\text{ V}}{6{,}00\\text{ A}} = 0{,}50\\ \\Omega$." },
+                { level: "Thông hiểu", q: "[Bổ sung] Khi đo một pin điện hóa, ở $I_1 = 0{,}20\\text{ A}$ thì $U_1 = 1{,}42\\text{ V}$; ở $I_2 = 0{,}50\\text{ A}$ thì $U_2 = 1{,}30\\text{ V}$. Xác định $\\mathcal{E}$ và $r$ của pin.", sol: "<strong>Giải:</strong> $r = \\frac{1{,}42 - 1{,}30}{0{,}50 - 0{,}20} = 0{,}40\\ \\Omega \\Rightarrow \\mathcal{E} = U_1 + rI_1 = 1{,}42 + 0{,}40(0{,}20) = 1{,}50\\text{ V}$." },
+                { level: "Vận dụng", q: "[Bổ sung] Mắc vôn kế có điện trở $R_V = 100\\ \\Omega$ vào hai cực của pin ($\\mathcal{E} = 1{,}50\\text{ V},\\ r = 1{,}0\\ \\Omega$) lúc mạch ngoài hở. Tính số chỉ vôn kế $U_V$ và sai số tương đối so với suất điện động thật $\\mathcal{E}$.", sol: "<strong>Giải:</strong> Dòng qua vôn kế $I = \\frac{\\mathcal{E}}{R_V + r} \\Rightarrow U_V = I R_V = 1{,}50\\cdot\\frac{100}{101} \\approx 1{,}485\\text{ V}$.<br>Sai số tương đối: $\\delta = \\frac{1{,}50 - 1{,}485}{1{,}50}\\cdot 100\\% \\approx 1{,}0\\%$ (chứng tỏ vôn kế cần có $R_V \\gg r$ để đo chính xác)." }
+              ]
+            }
+          ],
+          errors: [
+            "Đổi sai tiết diện $1\\text{ mm}^2 = 10^{-6}\\text{ m}^2$ (hay nhầm thành $10^{-3}$).",
+            "Nhầm chiều dòng điện quy ước với chiều chuyển động của electron tự do.",
+            "Quên điện trở trong $r$ của nguồn khi tính $U = \\mathcal{E} - Ir$ hoặc nhầm kW·h là đơn vị công suất."
+          ],
+          summary: "Dòng điện là dòng hạt tải điện có hướng tuân theo I = Snve, định luật Ohm cho vật dẫn/toàn mạch và quy luật chuyển hóa năng lượng điện."
+        }
+      ],
+
+      quantities: [
+        { name: "Li độ, Biên độ, Bước sóng", sym: "x, A, λ", unit: "mét (m)", dim: "[L]" },
+        { name: "Chu kì", sym: "T", unit: "giây (s)", dim: "[T]" },
+        { name: "Tần số, Tần số góc", sym: "f, ω", unit: "Hz; rad/s", dim: "[T⁻¹]" },
+        { name: "Cường độ sóng", sym: "I", unit: "W/m²", dim: "[M T⁻³]" },
+        { name: "Điện tích", sym: "q, Q", unit: "cu-lông (C)", dim: "[I T]" },
+        { name: "Cường độ điện trường", sym: "E", unit: "V/m (N/C)", dim: "[M L T⁻³ I⁻¹]" },
+        { name: "Điện thế, Hiệu điện thế, Suất điện động", sym: "V, U, E", unit: "vôn (V)", dim: "[M L² T⁻³ I⁻¹]" },
+        { name: "Điện dung tụ điện", sym: "C", unit: "fara (F)", dim: "[M⁻¹ L⁻² T⁴ I²]" },
+        { name: "Cường độ dòng điện", sym: "I", unit: "ampe (A)", dim: "[I]" },
+        { name: "Điện trở", sym: "R", unit: "ôm (Ω)", dim: "[M L² T⁻³ I⁻²]" },
+        { name: "Điện trở suất", sym: "ρ", unit: "Ω·m", dim: "[M L³ T⁻³ I⁻²]" },
+        { name: "Năng lượng, Công / Công suất", sym: "W, A / P", unit: "J / W", dim: "[M L² T⁻²] / [M L² T⁻³]" }
+      ],
+
+      constants: [
+        { name: "Tốc độ ánh sáng trong chân không", sym: "c", val: "3,00 · 10⁸ m/s" },
+        { name: "Điện tích nguyên tố", sym: "e", val: "1,60 · 10⁻¹⁹ C" },
+        { name: "Khối lượng electron", sym: "m_e", val: "9,11 · 10⁻³¹ kg" },
+        { name: "Hằng số điện", sym: "ε₀", val: "8,85 · 10⁻¹² C²/(N·m²)" },
+        { name: "Hệ số tỉ lệ Coulomb", sym: "k = 1/(4πε₀)", val: "9,00 · 10⁹ N·m²/C²" },
+        { name: "Gia tốc rơi tự do gần mặt đất", sym: "g", val: "9,8 m/s² (thường lấy 9,8 hoặc 10)" },
+        { name: "Tiền tố SI thông dụng", sym: "G, M, k | m, µ, n, p", val: "10⁹, 10⁶, 10³ | 10⁻³, 10⁻⁶, 10⁻⁹, 10⁻¹²" }
+      ],
+
+      quiz: [
+        // Chương 1 (3 câu)
+        { cat: "ch1", lvl: "Thông hiểu", q: "Vật DĐĐH với phương trình $x = 6\\cos(4\\pi t + \\frac{\\pi}{2})\\text{ cm}$. Tốc độ cực đại của vật là:", opts: ["$24\\pi\\text{ cm/s}$", "$12\\pi\\text{ cm/s}$", "$6\\pi\\text{ cm/s}$", "$96\\pi^2\\text{ cm/s}$"], ans: 0, exp: "$v_{\\max} = \\omega A = 4\\pi \\cdot 6 = 24\\pi\\text{ cm/s}$." },
+        { cat: "ch1", lvl: "Vận dụng", q: "Một vật DĐĐH biên độ $A$. Ở li độ nào thì động năng bằng $3$ lần thế năng?", opts: ["$x = \\pm\\frac{A}{\\sqrt{2}}$", "$x = \\pm\\frac{A}{2}$", "$x = \\pm\\frac{A\\sqrt{3}}{2}$", "$x = \\pm\\frac{A}{4}$"], ans: 1, exp: "$W_d = 3W_t \\Rightarrow |x| = \\frac{A}{\\sqrt{3+1}} = \\frac{A}{2}$." },
+        { cat: "ch1", lvl: "Nhận biết", q: "Khi xảy ra cộng hưởng cơ, tần số $f$ của ngoại lực cưỡng bức thỏa mãn:", opts: ["$f = 2f_0$", "$f = f_0/2$", "$f = f_0$", "$f \\gg f_0$"], ans: 2, exp: "Điều kiện cộng hưởng là tần số ngoại lực bằng tần số riêng $f = f_0$." },
+
+        // Chương 2 (3 câu)
+        { cat: "ch2", lvl: "Nhận biết", q: "Khi thay đổi tần số dao động của nguồn sóng cơ trong một môi trường đồng nhất, đại lượng KHÔNG đổi là:", opts: ["Chu kì sóng", "Bước sóng", "Tần số sóng", "Tốc độ truyền sóng"], ans: 3, exp: "Tốc độ truyền sóng $v$ chỉ phụ thuộc vào bản chất môi trường truyền sóng." },
+        { cat: "ch2", lvl: "Thông hiểu", q: "Thí nghiệm Young có $a = 0{,}5\\text{ mm},\\ D = 1{,}5\\text{ m},\\ \\lambda = 0{,}60\\ \\mu\\text{m}$. Khoảng vân $i$ bằng:", opts: ["$1{,}8\\text{ mm}$", "$0{,}9\\text{ mm}$", "$2{,}0\\text{ mm}$", "$1{,}2\\text{ mm}$"], ans: 0, exp: "$i = \\frac{\\lambda D}{a} = \\frac{0{,}60 \\cdot 1{,}5}{0{,}5} = 1{,}8\\text{ mm}$." },
+        { cat: "ch2", lvl: "Vận dụng", q: "Dây dài $L = 1{,}2\\text{ m}$ hai đầu cố định có sóng dừng với $4$ bụng sóng, $f = 50\\text{ Hz}$. Tốc độ truyền sóng trên dây là:", opts: ["$15\\text{ m/s}$", "$30\\text{ m/s}$", "$60\\text{ m/s}$", "$120\\text{ m/s}$"], ans: 1, exp: "$L = 4\\frac{\\lambda}{2} \\Rightarrow \\lambda = 0{,}6\\text{ m} \\Rightarrow v = \\lambda f = 0{,}6 \\cdot 50 = 30\\text{ m/s}$." },
+
+        // Chương 3 (3 câu)
+        { cat: "ch3", lvl: "Thông hiểu", q: "Nếu khoảng cách giữa hai điện tích điểm tăng $2$ lần và mỗi điện tích tăng $3$ lần thì lực Coulomb thay đổi thế nào?", opts: ["Tăng $1{,}5$ lần", "Tăng $2{,}25$ lần", "Giảm $2{,}25$ lần", "Tăng $4{,}5$ lần"], ans: 1, exp: "$F \\propto \\frac{|q_1 q_2|}{r^2} \\Rightarrow$ tăng $\\frac{3 \\cdot 3}{2^2} = \\frac{9}{4} = 2{,}25$ lần." },
+        { cat: "ch3", lvl: "Thông hiểu", q: "Hai bản phẳng song song cách nhau $d = 2\\text{ cm}$, hiệu điện thế $U = 100\\text{ V}$. Cường độ điện trường đều giữa hai bản là:", opts: ["$50\\text{ V/m}$", "$500\\text{ V/m}$", "$5000\\text{ V/m}$", "$200\\text{ V/m}$"], ans: 2, exp: "$E = \\frac{U}{d} = \\frac{100}{0{,}02} = 5000\\text{ V/m}$." },
+        { cat: "ch3", lvl: "Vận dụng", q: "Ba tụ $C_1 = 2\\ \\mu\\text{F},\\ C_2 = 3\\ \\mu\\text{F},\\ C_3 = 6\\ \\mu\\text{F}$ ghép nối tiếp có điện dung tương đương là:", opts: ["$11\\ \\mu\\text{F}$", "$1\\ \\mu\\text{F}$", "$2\\ \\mu\\text{F}$", "$0{,}5\\ \\mu\\text{F}$"], ans: 1, exp: "$\\frac{1}{C} = \\frac{1}{2} + \\frac{1}{3} + \\frac{1}{6} = 1 \\Rightarrow C = 1\\ \\mu\\text{F}$." },
+
+        // Chương 4 (3 câu)
+        { cat: "ch4", lvl: "Thông hiểu", q: "Dòng điện không đổi $I = 2\\text{ A}$ chạy qua dây dẫn trong $1$ phút. Điện lượng chuyển qua tiết diện thẳng là:", opts: ["$2\\text{ C}$", "$60\\text{ C}$", "$120\\text{ C}$", "$30\\text{ C}$"], ans: 2, exp: "$\\Delta q = I\\Delta t = 2 \\cdot 60 = 120\\text{ C}$." },
+        { cat: "ch4", lvl: "Thông hiểu", q: "Đường đặc trưng $I - U$ của một điện trở thuần $R$ là đường thẳng đi qua gốc tọa độ có hệ số góc (độ dốc) bằng:", opts: ["$R$", "$1/R$", "$R^2$", "$U/I$"], ans: 1, exp: "Vì $I = \\frac{1}{R}U$ nên độ dốc đồ thị $I - U$ là $k = \\frac{1}{R}$." },
+        { cat: "ch4", lvl: "Vận dụng", q: "Nguồn $\\mathcal{E} = 9\\text{ V},\\ r = 1\\ \\Omega$ nối với điện trở $R = 8\\ \\Omega$. Hiệu điện thế hai cực của nguồn là:", opts: ["$9\\text{ V}$", "$8\\text{ V}$", "$1\\text{ V}$", "$7{,}2\\text{ V}$"], ans: 1, exp: "$I = \\frac{9}{8+1} = 1\\text{ A} \\Rightarrow U = \\mathcal{E} - Ir = 8\\text{ V}$." },
+
+        // 10 câu Tổng hợp HSG
+        { cat: "mix", lvl: "Vận dụng cao", q: "Tổng hợp 1: Một vật DĐĐH chu kì $T$. Khoảng thời gian ngắn nhất giữa hai lần liên tiếp động năng bằng thế năng là:", opts: ["$T/2$", "$T/4$", "$T/8$", "$T/6$"], ans: 1, exp: "Tại $x = \\pm A/\\sqrt{2}$ (các góc $\\pm\\pi/4, \\pm 3\\pi/4$), hai vị trí liên tiếp cách nhau góc $\\pi/2 \\Rightarrow \\Delta t = T/4$." },
+        { cat: "mix", lvl: "Vận dụng cao", q: "Tổng hợp 2: Vật DĐĐH biên độ $A = 10\\text{ cm}$. Quãng đường lớn nhất vật đi được trong thời gian $T/3$ là:", opts: ["$10\\text{ cm}$", "$10\\sqrt{3}\\text{ cm}$", "$15\\text{ cm}$", "$10\\sqrt{2}\\text{ cm}$"], ans: 1, exp: "$\\Delta\\varphi = \\frac{2\\pi}{3} \\Rightarrow S_{\\max} = 2A\\sin(\\frac{\\pi}{3}) = 20\\cdot\\frac{\\sqrt{3}}{2} = 10\\sqrt{3}\\text{ cm}$." },
+        { cat: "mix", lvl: "Vận dụng", q: "Tổng hợp 3: Con lắc lò xo có cơ năng $W = 0{,}2\\text{ J}$. Nếu tăng biên độ lên $2$ lần và giữ nguyên độ cứng $k$ thì cơ năng mới là:", opts: ["$0{,}4\\text{ J}$", "$0{,}8\\text{ J}$", "$0{,}2\\text{ J}$", "$1{,}6\\text{ J}$"], ans: 1, exp: "$W = \\frac{1}{2}kA^2 \\propto A^2 \\Rightarrow$ tăng $4$ lần thành $0{,}8\\text{ J}$." },
+        { cat: "mix", lvl: "Vận dụng cao", q: "Tổng hợp 4: Trên phương truyền sóng, hai điểm cách nhau $d = \\frac{5\\lambda}{4}$ dao động lệch pha nhau:", opts: ["Cùng pha", "Ngược pha", "Vuông pha ($\\pi/2$)", "Lệch pha $\\pi/4$"], ans: 2, exp: "$\\Delta\\varphi = \\frac{2\\pi d}{\\lambda} = 2{,}5\\pi = 2\\pi + \\frac{\\pi}{2}$ (vuông pha)." },
+        { cat: "mix", lvl: "Vận dụng", q: "Tổng hợp 5: Trong thí nghiệm Young, khoảng cách giữa $11$ vân sáng liên tiếp là $15\\text{ mm}$. Khoảng vân $i$ bằng:", opts: ["$1{,}36\\text{ mm}$", "$1{,}50\\text{ mm}$", "$1{,}25\\text{ mm}$", "$1{,}65\\text{ mm}$"], ans: 1, exp: "$11$ vân sáng liên tiếp có $10$ khoảng vân: $i = 15/10 = 1{,}50\\text{ mm}$." },
+        { cat: "mix", lvl: "Vận dụng cao", q: "Tổng hợp 6: Ống khí một đầu kín, một đầu hở dài $L$ có sóng dừng với âm cơ bản (tần số nhỏ nhất $f_1$). Tần số họa âm tiếp theo $f_2$ bằng:", opts: ["$2f_1$", "$3f_1$", "$4f_1$", "$1{,}5f_1$"], ans: 1, exp: "Ống 1 đầu kín: $L = (2n+1)\\frac{v}{4f} \\Rightarrow f_n = (2n+1)f_1$ (chỉ có họa âm bậc lẻ: $f_1, 3f_1, 5f_1...$)." },
+        { cat: "mix", lvl: "Vận dụng cao", q: "Tổng hợp 7: Hai điện tích $q_1 = +9\\ \\mu\\text{C}$ và $q_2 = -1\\ \\mu\\text{C}$ đặt cách nhau $10\\text{ cm}$. Điểm có điện trường tổng hợp bằng $0$ nằm:", opts: ["Trong đoạn nối, cách $q_2$ $2{,}5\\text{ cm}$", "Ngoài đoạn nối, gần $q_2$, cách $q_2$ $5\\text{ cm}$", "Ngoài đoạn nối, gần $q_1$, cách $q_1$ $5\\text{ cm}$", "Trung điểm đoạn nối"], ans: 1, exp: "Trái dấu nên nằm ngoài về phía $|q|$ nhỏ hơn ($q_2$): $\\frac{9}{(10+x)^2} = \\frac{1}{x^2} \\Rightarrow 3x = 10+x \\Rightarrow x = 5\\text{ cm}$." },
+        { cat: "mix", lvl: "Vận dụng", q: "Tổng hợp 8: Tụ $C = 10\\ \\mu\\text{F}$ được tích điện đến $U = 100\\text{ V}$. Năng lượng điện trường trong tụ là:", opts: ["$0{,}05\\text{ J}$", "$0{,}10\\text{ J}$", "$50\\text{ J}$", "$0{,}01\\text{ J}$"], ans: 0, exp: "$W = \\frac{1}{2}CU^2 = 0{,}5 \\cdot 10^{-5} \\cdot 10^4 = 0{,}05\\text{ J}$." },
+        { cat: "mix", lvl: "Vận dụng cao", q: "Tổng hợp 9: Nguồn $\\mathcal{E} = 10\\text{ V},\\ r = 2\\ \\Omega$ mắc với biến trở $R$. Hai giá trị $R_1 = 1\\ \\Omega$ và $R_2$ cho cùng công suất mạch ngoài. Giá trị $R_2$ là:", opts: ["$2\\ \\Omega$", "$4\\ \\Omega$", "$3\\ \\Omega$", "$5\\ \\Omega$"], ans: 1, exp: "Theo hệ quả Viète: $R_1 R_2 = r^2 = 4 \\Rightarrow R_2 = 4/1 = 4\\ \\Omega$." },
+        { cat: "mix", lvl: "Vận dụng", q: "Tổng hợp 10: Khi công suất tiêu thụ mạch ngoài đạt cực đại ($R_N = r$), hiệu suất của nguồn điện bằng:", opts: ["$25\\%$", "$50\\%$", "$75\\%$", "$100\\%$"], ans: 1, exp: "$H = \\frac{R_N}{R_N + r} = \\frac{r}{2r} = 50\\%$." }
+      ]
+    };
+
+    /* =====================================================================
+       B1. NỀN CANVAS VẬT LÍ ĐỘNG (HẠT ĐIỆN TÍCH, ĐƯỜNG SỨC, SÓNG SIN, CÔNG THỨC)
+       ===================================================================== */
+    (function initPhysicsCanvas() {
+      const canvas = document.getElementById("physics-canvas");
+      const ctx = canvas.getContext("2d");
+      const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      let width = 0, height = 0, rafId = null, tick = 0;
+
+      const floatingFormulas = [
+        "x = A cos(ωt + φ)", "v = λf", "F = k|q₁q₂|/r²",
+        "I = U/R", "E = U/d", "C = Q/U", "W = ½mω²A²", "I = Snve"
+      ];
+      let particles = [];
+      let floaters = [];
+
+      function resize() {
+        width = canvas.width = window.innerWidth;
+        height = canvas.height = window.innerHeight;
+        const count = width < 768 ? 14 : 28;
+        particles = Array.from({ length: count }, (_, i) => ({
+          x: Math.random() * width,
+          y: Math.random() * height,
+          vx: (Math.random() - 0.5) * 0.45,
+          vy: (Math.random() - 0.5) * 0.45,
+          q: i % 2 === 0 ? 1 : -1,
+          r: 3 + Math.random() * 2.5
+        }));
+        floaters = floatingFormulas.map((txt, i) => ({
+          txt,
+          x: (width / floatingFormulas.length) * i + 40,
+          y: 90 + Math.random() * (height - 200),
+          vx: (i % 2 === 0 ? 1 : -1) * 0.16,
+          vy: (Math.random() - 0.5) * 0.12
+        }));
+      }
+
+      function drawFrame() {
+        const isDark = document.documentElement.getAttribute("data-theme") === "dark";
+        ctx.clearRect(0, 0, width, height);
+
+        // 1. Lưới tọa độ rất mờ
+        ctx.strokeStyle = isDark ? "rgba(56, 189, 248, 0.04)" : "rgba(2, 132, 199, 0.045)";
+        ctx.lineWidth = 1;
+        const step = 48;
+        ctx.beginPath();
+        for (let x = 0; x < width; x += step) { ctx.moveTo(x, 0); ctx.lineTo(x, height); }
+        for (let y = 0; y < height; y += step) { ctx.moveTo(0, y); ctx.lineTo(width, y); }
+        ctx.stroke();
+
+        // 2. Đường sức điện trường cong mềm giữa hai điện tích lưỡng cực cố định ở góc phải
+        const p1 = { x: width * 0.78, y: height * 0.34 };
+        const p2 = { x: width * 0.90, y: height * 0.52 };
+        ctx.strokeStyle = isDark ? "rgba(167, 139, 250, 0.11)" : "rgba(124, 58, 237, 0.07)";
+        ctx.lineWidth = 1.2;
+        for (let k = -3; k <= 3; k++) {
+          ctx.beginPath();
+          ctx.moveTo(p1.x, p1.y);
+          const cx = (p1.x + p2.x) / 2 + k * 42;
+          const cy = (p1.y + p2.y) / 2 - k * 34;
+          ctx.quadraticCurveTo(cx, cy, p2.x, p2.y);
+          ctx.stroke();
+        }
+
+        // 3. Các hạt mang điện (+ / -) hút đẩy nhẹ nhau
+        for (let i = 0; i < particles.length; i++) {
+          const a = particles[i];
+          if (!reducedMotion) {
+            for (let j = i + 1; j < particles.length; j++) {
+              const b = particles[j];
+              const dx = b.x - a.x, dy = b.y - a.y;
+              const dist2 = dx * dx + dy * dy + 900;
+              if (dist2 < 28000) {
+                const force = (a.q * b.q * -0.18) / dist2;
+                a.vx += dx * force; a.vy += dy * force;
+                b.vx -= dx * force; b.vy -= dy * force;
+              }
+            }
+            a.vx = Math.max(-0.7, Math.min(0.7, a.vx));
+            a.vy = Math.max(-0.7, Math.min(0.7, a.vy));
+            a.x = (a.x + a.vx + width) % width;
+            a.y = (a.y + a.vy + height) % height;
+          }
+          ctx.beginPath();
+          ctx.arc(a.x, a.y, a.r, 0, Math.PI * 2);
+          ctx.fillStyle = a.q > 0
+            ? (isDark ? "rgba(245, 158, 11, 0.35)" : "rgba(217, 119, 6, 0.2)")
+            : (isDark ? "rgba(56, 189, 248, 0.38)" : "rgba(2, 132, 199, 0.2)");
+          ctx.fill();
+        }
+
+        // 4. Vài sóng hình sin dao động chậm ở đáy trang
+        const waveColors = isDark
+          ? ["rgba(56, 189, 248, 0.14)", "rgba(167, 139, 250, 0.12)"]
+          : ["rgba(2, 132, 199, 0.08)", "rgba(124, 58, 237, 0.07)"];
+        waveColors.forEach((col, idx) => {
+          ctx.beginPath();
+          ctx.strokeStyle = col;
+          ctx.lineWidth = 1.6;
+          for (let x = 0; x <= width; x += 12) {
+            const y = height - 55 + Math.sin(x * 0.008 + tick * (0.015 + idx * 0.007) + idx * 2) * (18 + idx * 8);
+            if (x === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+          }
+          ctx.stroke();
+        });
+
+        // 5. Công thức Vật lí mờ trôi nhẹ
+        ctx.font = "600 13px 'Be Vietnam Pro', sans-serif";
+        ctx.fillStyle = isDark ? "rgba(148, 163, 184, 0.13)" : "rgba(71, 85, 105, 0.09)";
+        floaters.forEach(f => {
+          if (!reducedMotion) {
+            f.x = (f.x + f.vx + width) % width;
+            f.y = (f.y + f.vy + height) % height;
+          }
+          ctx.fillText(f.txt, f.x, f.y);
+        });
+
+        tick++;
+        if (!reducedMotion && !document.hidden) {
+          rafId = requestAnimationFrame(drawFrame);
+        }
+      }
+
+      window.addEventListener("resize", () => { resize(); if (reducedMotion) drawFrame(); });
+      document.addEventListener("visibilitychange", () => {
+        if (document.hidden && rafId) cancelAnimationFrame(rafId);
+        else if (!document.hidden && !reducedMotion) rafId = requestAnimationFrame(drawFrame);
+      });
+
+      resize();
+      drawFrame();
+      window._redrawCanvas = drawFrame;
+    })();
+
+    /* =====================================================================
+       RENDER GIAO DIỆN TỪ OBJECT JSON PHYSICS_DATA
+       ===================================================================== */
+    function renderMathSafe(el = document.body) {
+      if (window.renderMathInElement) {
+        renderMathInElement(el, {
+          delimiters: [
+            { left: "$$", right: "$$", display: true },
+            { left: "$", right: "$", display: false }
+          ],
+          throwOnError: false
+        });
+      }
+    }
+
+    /* =====================================================================
+       BỘ SINH HÌNH ẢNH MINH HỌA SVG SỐNG ĐỘNG CHO TỪNG BÀI & TỪNG VÍ DỤ
+       ===================================================================== */
+    function renderLessonVisual(id) {
+      const C = {
+        p: "var(--primary)", a: "var(--accent)", w: "var(--adv-border)",
+        t: "var(--text)", m: "var(--text-muted)", ok: "var(--ok-border)", err: "var(--warn-border)"
+      };
+      const diagrams = {
+        b1_2: {
+          cap: "Hình minh họa: Hình chiếu chuyển động tròn đều lên trục Ox tạo ra dao động điều hòa hình sin x = A cos(ωt + φ).",
+          svg: `<svg viewBox="0 0 560 175" role="img" aria-label="Vòng tròn lượng giác và đồ thị dao động điều hòa">
+            <circle cx="95" cy="90" r="56" fill="none" stroke="${C.p}" stroke-width="2" stroke-dasharray="4 3"/>
+            <line x1="25" y1="90" x2="165" y2="90" stroke="${C.m}" stroke-width="1.2"/>
+            <line x1="95" y1="20" x2="95" y2="160" stroke="${C.m}" stroke-width="1.2"/>
+            <line x1="95" y1="90" x2="134" y2="50" stroke="${C.w}" stroke-width="2.2"/>
+            <circle cx="134" cy="50" r="6" fill="${C.w}" class="anim-pulse"/>
+            <line x1="134" y1="50" x2="134" y2="90" stroke="${C.w}" stroke-dasharray="3 2"/>
+            <circle cx="134" cy="90" r="5" fill="${C.p}" class="anim-osc-x"/>
+            <text x="155" y="84" fill="${C.t}" font-size="11" font-weight="700">+A</text>
+            <text x="20" y="84" fill="${C.t}" font-size="11" font-weight="700">-A</text>
+            <text x="115" y="76" fill="${C.w}" font-size="11">φ</text>
+            <line x1="210" y1="90" x2="535" y2="90" stroke="${C.m}" stroke-width="1.4"/>
+            <line x1="225" y1="22" x2="225" y2="158" stroke="${C.m}" stroke-width="1.4"/>
+            <path d="M225 40 Q260 40 280 90 T335 140 T390 90 T445 40 T500 90" fill="none" stroke="${C.p}" stroke-width="3"/>
+            <line x1="225" y1="40" x2="445" y2="40" stroke="${C.a}" stroke-dasharray="4 3"/>
+            <text x="325" y="33" fill="${C.a}" font-size="11" font-weight="700">Chu kì T</text>
+            <text x="204" y="44" fill="${C.t}" font-size="11">A</text>
+            <text x="199" y="144" fill="${C.t}" font-size="11">-A</text>
+            <text x="520" y="106" fill="${C.t}" font-size="11">t (s)</text>
+          </svg>`
+        },
+        b3_4: {
+          cap: "Hình minh họa: Quan hệ pha giữa x (cyan), v sớm pha π/2 (tím) và a ngược pha x (vàng cam).",
+          svg: `<svg viewBox="0 0 560 175" role="img" aria-label="Đồ thị x, v, a trong dao động điều hòa">
+            <line x1="40" y1="90" x2="525" y2="90" stroke="${C.m}" stroke-width="1.4"/>
+            <line x1="60" y1="18" x2="60" y2="160" stroke="${C.m}" stroke-width="1.4"/>
+            <path d="M60 35 C105 35 120 145 165 145 C210 145 225 35 270 35 C315 35 330 145 375 145 C420 145 435 35 480 35" fill="none" stroke="${C.p}" stroke-width="2.6"/>
+            <path d="M60 90 C90 145 125 145 165 90 C205 35 235 35 270 90 C305 145 340 145 375 90 C410 35 445 35 480 90" fill="none" stroke="${C.a}" stroke-width="2.2" stroke-dasharray="6 3"/>
+            <path d="M60 145 C105 145 120 35 165 35 C210 35 225 145 270 145 C315 145 330 35 375 35 C420 35 435 145 480 145" fill="none" stroke="${C.w}" stroke-width="2" stroke-dasharray="2 3"/>
+            <rect x="330" y="12" width="195" height="24" rx="6" fill="var(--surface)"/>
+            <text x="340" y="28" fill="${C.p}" font-size="11" font-weight="700">— x</text>
+            <text x="380" y="28" fill="${C.a}" font-size="11" font-weight="700">-- v (+π/2)</text>
+            <text x="455" y="28" fill="${C.w}" font-size="11" font-weight="700">··· a (π)</text>
+            <text x="160" y="106" fill="${C.m}" font-size="10">T/2</text>
+            <text x="266" y="106" fill="${C.m}" font-size="10">T</text>
+          </svg>`
+        },
+        b5_7: {
+          cap: "Hình minh họa: Con lắc đơn dao động nhỏ và đồ thị parabol chuyển hóa Động năng Wđ – Thế năng Wt (Cơ năng W = const).",
+          svg: `<svg viewBox="0 0 560 175" role="img" aria-label="Đồ thị năng lượng và con lắc đơn">
+            <line x1="55" y1="24" x2="125" y2="24" stroke="${C.t}" stroke-width="3"/>
+            <line x1="90" y1="24" x2="90" y2="145" stroke="${C.m}" stroke-dasharray="3 3"/>
+            <g class="anim-swing">
+              <line x1="90" y1="24" x2="90" y2="125" stroke="${C.p}" stroke-width="2.2"/>
+              <circle cx="90" cy="130" r="11" fill="${C.w}"/>
+            </g>
+            <text x="64" y="160" fill="${C.m}" font-size="11">Con lắc đơn</text>
+            <line x1="210" y1="145" x2="520" y2="145" stroke="${C.m}" stroke-width="1.5"/>
+            <line x1="365" y1="25" x2="365" y2="155" stroke="${C.m}" stroke-width="1.5"/>
+            <line x1="245" y1="40" x2="485" y2="40" stroke="${C.t}" stroke-width="1.8" stroke-dasharray="5 3"/>
+            <path d="M245 40 Q365 250 485 40" fill="none" stroke="${C.p}" stroke-width="2.8"/>
+            <path d="M245 145 Q365 -65 485 145" fill="none" stroke="${C.err}" stroke-width="2.8"/>
+            <text x="492" y="44" fill="${C.t}" font-size="11" font-weight="700">W = const</text>
+            <text x="468" y="74" fill="${C.p}" font-size="11" font-weight="700">Wt</text>
+            <text x="372" y="60" fill="${C.err}" font-size="11" font-weight="700">Wđ</text>
+            <text x="235" y="160" fill="${C.m}" font-size="11">-A</text>
+            <text x="361" y="166" fill="${C.m}" font-size="11">0</text>
+            <text x="480" y="160" fill="${C.m}" font-size="11">+A</text>
+          </svg>`
+        },
+        b6: {
+          cap: "Hình minh họa: Dao động tắt dần (biên độ giảm dần theo thời gian) và đường cong cộng hưởng nhọn tại f = f₀.",
+          svg: `<svg viewBox="0 0 560 175" role="img" aria-label="Dao động tắt dần và đồ thị cộng hưởng">
+            <line x1="25" y1="90" x2="255" y2="90" stroke="${C.m}" stroke-width="1.3"/>
+            <path d="M30 90 Q45 25 60 90 T90 90 Q105 48 120 90 T150 90 Q165 65 180 90 T210 90 Q222 78 235 90" fill="none" stroke="${C.p}" stroke-width="2.5"/>
+            <path d="M30 35 Q130 55 245 84" fill="none" stroke="${C.w}" stroke-dasharray="4 3"/>
+            <text x="65" y="158" fill="${C.m}" font-size="11">Dao động tắt dần</text>
+            <line x1="300" y1="145" x2="535" y2="145" stroke="${C.m}" stroke-width="1.4"/>
+            <line x1="315" y1="22" x2="315" y2="152" stroke="${C.m}" stroke-width="1.4"/>
+            <path d="M320 135 Q395 130 420 32 Q445 130 520 136" fill="none" stroke="${C.err}" stroke-width="2.8"/>
+            <path d="M320 138 Q395 132 420 88 Q445 132 520 138" fill="none" stroke="${C.a}" stroke-width="2" stroke-dasharray="4 3"/>
+            <line x1="420" y1="32" x2="420" y2="145" stroke="${C.w}" stroke-dasharray="3 3"/>
+            <text x="414" y="160" fill="${C.w}" font-size="11" font-weight="700">f₀</text>
+            <text x="440" y="45" fill="${C.err}" font-size="10" font-weight="700">Lực cản nhỏ</text>
+            <text x="446" y="92" fill="${C.a}" font-size="10">Lực cản lớn</text>
+          </svg>`
+        },
+        b8_9_10: {
+          cap: "Hình minh họa: Sóng ngang (phần tử dao động vuông góc phương truyền) và sóng dọc (nén – dãn dọc theo phương truyền).",
+          svg: `<svg viewBox="0 0 560 175" role="img" aria-label="Sóng ngang và sóng dọc">
+            <line x1="30" y1="58" x2="520" y2="58" stroke="${C.m}" stroke-dasharray="3 3"/>
+            <path d="M35 58 Q70 12 105 58 T175 58 T245 58 T315 58 T385 58 T455 58" fill="none" stroke="${C.p}" stroke-width="2.8"/>
+            <line x1="70" y1="24" x2="210" y2="24" stroke="${C.w}" stroke-width="1.8"/>
+            <text x="132" y="19" fill="${C.w}" font-size="12" font-weight="700">λ</text>
+            <circle cx="175" cy="58" r="5" fill="${C.err}" class="anim-osc-y"/>
+            <text x="465" y="48" fill="${C.p}" font-size="11" font-weight="700">Sóng ngang</text>
+            <g stroke="${C.a}" stroke-width="2" fill="none">
+              <path d="M35 132 h35 m8 0 h8 m6 0 h6 m5 0 h5 m4 0 h4 m6 0 h8 m12 0 h16 m18 0 h18 m12 0 h8 m5 0 h5 m4 0 h4 m5 0 h6 m12 0 h18 m18 0 h18"/>
+              <line x1="100" y1="115" x2="100" y2="148"/><line x1="108" y1="115" x2="108" y2="148"/><line x1="115" y1="115" x2="115" y2="148"/><line x1="122" y1="115" x2="122" y2="148"/>
+              <line x1="165" y1="115" x2="165" y2="148"/><line x1="190" y1="115" x2="190" y2="148"/>
+              <line x1="255" y1="115" x2="255" y2="148"/><line x1="262" y1="115" x2="262" y2="148"/><line x1="269" y1="115" x2="269" y2="148"/><line x1="276" y1="115" x2="276" y2="148"/>
+              <line x1="330" y1="115" x2="330" y2="148"/><line x1="360" y1="115" x2="360" y2="148"/>
+            </g>
+            <text x="98" y="164" fill="${C.w}" font-size="10">Nén</text>
+            <text x="166" y="164" fill="${C.m}" font-size="10">Dãn</text>
+            <text x="465" y="136" fill="${C.a}" font-size="11" font-weight="700">Sóng dọc</text>
+          </svg>`
+        },
+        b11: {
+          cap: "Hình minh họa: Thang sóng điện từ — từ Sóng vô tuyến bước sóng dài đến Tia Gamma năng lượng cực cao.",
+          svg: `<svg viewBox="0 0 560 150" role="img" aria-label="Thang sóng điện từ">
+            <defs>
+              <linearGradient id="visGrad" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stop-color="#ef4444"/><stop offset="25%" stop-color="#f59e0b"/>
+                <stop offset="50%" stop-color="#22c55e"/><stop offset="75%" stop-color="#3b82f6"/><stop offset="100%" stop-color="#8b5cf6"/>
+              </linearGradient>
+            </defs>
+            <rect x="20" y="55" width="90" height="36" rx="4" fill="rgba(56,189,248,0.22)" stroke="${C.p}"/>
+            <rect x="112" y="55" width="75" height="36" rx="4" fill="rgba(56,189,248,0.32)" stroke="${C.p}"/>
+            <rect x="189" y="55" width="78" height="36" rx="4" fill="rgba(239,68,68,0.25)" stroke="${C.err}"/>
+            <rect x="269" y="55" width="60" height="36" rx="4" fill="url(#visGrad)"/>
+            <rect x="331" y="55" width="72" height="36" rx="4" fill="rgba(167,139,250,0.3)" stroke="${C.a}"/>
+            <rect x="405" y="55" width="65" height="36" rx="4" fill="rgba(167,139,250,0.45)" stroke="${C.a}"/>
+            <rect x="472" y="55" width="68" height="36" rx="4" fill="rgba(245,158,11,0.35)" stroke="${C.w}"/>
+            <g fill="${C.t}" font-size="10.5" font-weight="700" text-anchor="middle">
+              <text x="65" y="77">Vô tuyến</text><text x="150" y="77">Vi ba</text><text x="228" y="77">Hồng ngoại</text>
+              <text x="299" y="45" fill="${C.w}">Ánh sáng (0,38–0,76 µm)</text>
+              <text x="367" y="77">Tử ngoại</text><text x="437" y="77">Tia X</text><text x="506" y="77">Gamma γ</text>
+            </g>
+            <line x1="30" y1="118" x2="530" y2="118" stroke="${C.w}" stroke-width="2"/>
+            <text x="280" y="136" fill="${C.w}" font-size="11" font-weight="700" text-anchor="middle">Tần số f & Năng lượng tăng dần · Bước sóng λ giảm dần ⟶</text>
+          </svg>`
+        },
+        b12_14: {
+          cap: "Hình minh họa: Sơ đồ thí nghiệm Young — hai khe F₁, F₂ cách nhau a chiếu lên màn cách D tạo hệ vân sáng/tối cách đều khoảng vân i.",
+          svg: `<svg viewBox="0 0 560 175" role="img" aria-label="Thí nghiệm giao thoa khe Young">
+            <rect x="25" y="72" width="55" height="28" rx="5" fill="${C.err}" opacity="0.85"/>
+            <text x="52" y="90" fill="#fff" font-size="10" font-weight="700" text-anchor="middle">LASER</text>
+            <line x1="80" y1="86" x2="155" y2="62" stroke="${C.err}" stroke-width="1.6"/>
+            <line x1="80" y1="86" x2="155" y2="110" stroke="${C.err}" stroke-width="1.6"/>
+            <line x1="155" y1="22" x2="155" y2="56" stroke="${C.t}" stroke-width="4"/>
+            <line x1="155" y1="68" x2="155" y2="104" stroke="${C.t}" stroke-width="4"/>
+            <line x1="155" y1="116" x2="155" y2="152" stroke="${C.t}" stroke-width="4"/>
+            <text x="133" y="65" fill="${C.t}" font-size="11" font-weight="700">F₁</text>
+            <text x="133" y="114" fill="${C.t}" font-size="11" font-weight="700">F₂</text>
+            <text x="163" y="90" fill="${C.w}" font-size="11" font-weight="700">a</text>
+            <polygon points="155,62 440,25 440,148" fill="${C.err}" opacity="0.1"/>
+            <polygon points="155,110 440,25 440,148" fill="${C.err}" opacity="0.1"/>
+            <line x1="155" y1="62" x2="440" y2="52" stroke="${C.p}" stroke-width="1.5"/>
+            <line x1="155" y1="110" x2="440" y2="52" stroke="${C.p}" stroke-width="1.5"/>
+            <line x1="440" y1="20" x2="440" y2="155" stroke="${C.t}" stroke-width="3"/>
+            <g fill="${C.err}">
+              <rect x="448" y="34" width="16" height="8" rx="2"/><rect x="448" y="56" width="16" height="8" rx="2"/>
+              <rect x="448" y="82" width="22" height="9" rx="2" fill="${C.w}"/>
+              <rect x="448" y="108" width="16" height="8" rx="2"/><rect x="448" y="130" width="16" height="8" rx="2"/>
+            </g>
+            <text x="476" y="90" fill="${C.w}" font-size="10.5" font-weight="700">Vân TT (O)</text>
+            <text x="476" y="64" fill="${C.t}" font-size="10">Khoảng vân i</text>
+            <line x1="155" y1="162" x2="440" y2="162" stroke="${C.m}" stroke-dasharray="4 3"/>
+            <text x="295" y="158" fill="${C.t}" font-size="11" font-weight="700">D</text>
+          </svg>`
+        },
+        b13_15: {
+          cap: "Hình minh họa: Sóng dừng trên dây 2 đầu cố định (n = 3 bụng sóng, 4 nút sóng) — khoảng cách giữa 2 nút liên tiếp là λ/2.",
+          svg: `<svg viewBox="0 0 560 165" role="img" aria-label="Sóng dừng trên dây có nút và bụng sóng">
+            <line x1="45" y1="85" x2="515" y2="85" stroke="${C.m}" stroke-dasharray="4 3"/>
+            <path d="M50 85 Q125 18 200 85 T350 85 T500 85" fill="none" stroke="${C.p}" stroke-width="3"/>
+            <path d="M50 85 Q125 152 200 85 T350 85 T500 85" fill="none" stroke="${C.a}" stroke-width="2.5" stroke-dasharray="5 3"/>
+            <g fill="${C.w}">
+              <circle cx="50" cy="85" r="5"/><circle cx="200" cy="85" r="5"/><circle cx="350" cy="85" r="5"/><circle cx="500" cy="85" r="5"/>
+            </g>
+            <text x="40" y="106" fill="${C.w}" font-size="10.5" font-weight="700">Nút</text>
+            <text x="112" y="34" fill="${C.p}" font-size="11" font-weight="700">Bụng</text>
+            <line x1="200" y1="145" x2="350" y2="145" stroke="${C.ok}" stroke-width="2"/>
+            <text x="265" y="140" fill="${C.ok}" font-size="11" font-weight="700">λ/2</text>
+            <line x1="350" y1="30" x2="425" y2="30" stroke="${C.err}" stroke-width="1.8"/>
+            <text x="378" y="25" fill="${C.err}" font-size="11" font-weight="700">λ/4</text>
+          </svg>`
+        },
+        b16: {
+          cap: "Hình minh họa: Định luật Coulomb — hai điện tích cùng dấu đẩy nhau, trái dấu hút nhau dọc theo đường nối hai tâm.",
+          svg: `<svg viewBox="0 0 560 155" role="img" aria-label="Lực tương tác Coulomb">
+            <line x1="40" y1="48" x2="250" y2="48" stroke="${C.m}" stroke-dasharray="4 3"/>
+            <circle cx="105" cy="48" r="16" fill="${C.err}"/><text x="105" y="53" fill="#fff" font-size="15" font-weight="700" text-anchor="middle">+</text>
+            <circle cx="185" cy="48" r="16" fill="${C.err}"/><text x="185" y="53" fill="#fff" font-size="15" font-weight="700" text-anchor="middle">+</text>
+            <line x1="88" y1="48" x2="42" y2="48" stroke="${C.w}" stroke-width="3"/><polygon points="40,48 50,43 50,53" fill="${C.w}"/>
+            <line x1="202" y1="48" x2="248" y2="48" stroke="${C.w}" stroke-width="3"/><polygon points="250,48 240,43 240,53" fill="${C.w}"/>
+            <text x="145" y="84" fill="${C.m}" font-size="11" text-anchor="middle">Cùng dấu → Đẩy nhau</text>
+            <line x1="310" y1="48" x2="520" y2="48" stroke="${C.m}" stroke-dasharray="4 3"/>
+            <circle cx="355" cy="48" r="16" fill="${C.err}"/><text x="355" y="53" fill="#fff" font-size="15" font-weight="700" text-anchor="middle">+</text>
+            <circle cx="475" cy="48" r="16" fill="${C.p}"/><text x="475" y="53" fill="#fff" font-size="16" font-weight="700" text-anchor="middle">−</text>
+            <line x1="372" y1="48" x2="405" y2="48" stroke="${C.ok}" stroke-width="3"/><polygon points="407,48 397,43 397,53" fill="${C.ok}"/>
+            <line x1="458" y1="48" x2="425" y2="48" stroke="${C.ok}" stroke-width="3"/><polygon points="423,48 433,43 433,53" fill="${C.ok}"/>
+            <text x="415" y="84" fill="${C.m}" font-size="11" text-anchor="middle">Trái dấu → Hút nhau (F₁₂ = F₂₁)</text>
+            <text x="280" y="130" fill="${C.t}" font-size="12" font-weight="700" text-anchor="middle">F = k |q₁q₂| / r²</text>
+          </svg>`
+        },
+        b17: {
+          cap: "Hình minh họa: Đường sức điện trường của hệ 2 điện tích trái dấu (xuất phát từ + và kết thúc ở −).",
+          svg: `<svg viewBox="0 0 560 165" role="img" aria-label="Đường sức điện trường lưỡng cực">
+            <g fill="none" stroke="${C.p}" stroke-width="1.8" opacity="0.85">
+              <line x1="175" y1="82" x2="385" y2="82"/>
+              <path d="M175 82 Q280 20 385 82"/><path d="M175 82 Q280 144 385 82"/>
+              <path d="M175 82 Q280 -12 385 82"/><path d="M175 82 Q280 176 385 82"/>
+              <line x1="175" y1="82" x2="105" y2="55"/><line x1="175" y1="82" x2="105" y2="109"/>
+              <line x1="385" y1="82" x2="455" y2="55"/><line x1="385" y1="82" x2="455" y2="109"/>
+            </g>
+            <polygon points="286,82 276,77 276,87" fill="${C.w}"/>
+            <polygon points="286,51 276,46 276,56" fill="${C.w}"/>
+            <polygon points="286,113 276,108 276,118" fill="${C.w}"/>
+            <circle cx="175" cy="82" r="18" fill="${C.err}" class="anim-pulse"/><text x="175" y="88" fill="#fff" font-size="16" font-weight="700" text-anchor="middle">+Q</text>
+            <circle cx="385" cy="82" r="18" fill="${C.p}" class="anim-pulse"/><text x="385" y="88" fill="#fff" font-size="16" font-weight="700" text-anchor="middle">-Q</text>
+          </svg>`
+        },
+        b18: {
+          cap: "Hình minh họa: Điện trường đều E = U/d giữa hai bản phẳng song song làm lệch quỹ đạo electron thành đường parabol về phía bản dương.",
+          svg: `<svg viewBox="0 0 560 175" role="img" aria-label="Electron bay trong điện trường đều">
+            <rect x="115" y="20" width="330" height="16" rx="3" fill="${C.err}" opacity="0.85"/>
+            <text x="280" y="32" fill="#fff" font-size="12" font-weight="700" text-anchor="middle">+   +   +   +   +   +   +   +   +</text>
+            <rect x="115" y="138" width="330" height="16" rx="3" fill="${C.p}" opacity="0.85"/>
+            <text x="280" y="150" fill="#fff" font-size="12" font-weight="700" text-anchor="middle">−   −   −   −   −   −   −   −   −</text>
+            <g stroke="${C.p}" stroke-width="1.3" opacity="0.55">
+              <line x1="170" y1="36" x2="170" y2="138"/><line x1="245" y1="36" x2="245" y2="138"/>
+              <line x1="320" y1="36" x2="320" y2="138"/><line x1="395" y1="36" x2="395" y2="138"/>
+            </g>
+            <text x="405" y="92" fill="${C.p}" font-size="12" font-weight="700">E ↓</text>
+            <line x1="115" y1="88" x2="455" y2="88" stroke="${C.m}" stroke-dasharray="4 3"/>
+            <path d="M95 88 Q275 88 445 44" fill="none" stroke="${C.w}" stroke-width="3"/>
+            <circle cx="95" cy="88" r="9" fill="${C.a}"/><text x="95" y="92" fill="#fff" font-size="11" font-weight="700" text-anchor="middle">e⁻</text>
+            <text x="65" y="75" fill="${C.w}" font-size="11" font-weight="700">v₀ ⟶</text>
+            <text x="462" y="50" fill="${C.w}" font-size="11" font-weight="700">Parabol</text>
+          </svg>`
+        },
+        b19_20: {
+          cap: "Hình minh họa: Công lực điện A_MN = qEd không phụ thuộc hình dạng đường đi (MN hay MPN), chỉ phụ thuộc hình chiếu d và hiệu điện thế U_MN.",
+          svg: `<svg viewBox="0 0 560 165" role="img" aria-label="Công lực điện không phụ thuộc đường đi">
+            <g stroke="${C.p}" stroke-width="1.5" opacity="0.55">
+              <line x1="70" y1="35" x2="490" y2="35"/><line x1="70" y1="85" x2="490" y2="85"/><line x1="70" y1="135" x2="490" y2="135"/>
+            </g>
+            <text x="498" y="90" fill="${C.p}" font-size="12" font-weight="700">E ⟶</text>
+            <line x1="150" y1="25" x2="150" y2="145" stroke="${C.a}" stroke-dasharray="4 3"/>
+            <line x1="380" y1="25" x2="380" y2="145" stroke="${C.a}" stroke-dasharray="4 3"/>
+            <text x="132" y="20" fill="${C.a}" font-size="11" font-weight="700">VM</text>
+            <text x="366" y="20" fill="${C.a}" font-size="11" font-weight="700">VN (VM > VN)</text>
+            <path d="M150 55 L380 120" stroke="${C.w}" stroke-width="2.5" fill="none"/>
+            <path d="M150 55 Q275 15 320 65 T380 120" stroke="${C.ok}" stroke-width="2.2" stroke-dasharray="5 3" fill="none"/>
+            <circle cx="150" cy="55" r="6" fill="${C.err}"/><text x="132" y="55" fill="${C.t}" font-size="12" font-weight="700">M</text>
+            <circle cx="380" cy="120" r="6" fill="${C.err}"/><text x="392" y="124" fill="${C.t}" font-size="12" font-weight="700">N</text>
+            <line x1="150" y1="145" x2="380" y2="145" stroke="${C.w}" stroke-width="2"/>
+            <text x="255" y="160" fill="${C.w}" font-size="11" font-weight="700">d = M'N'</text>
+          </svg>`
+        },
+        b21: {
+          cap: "Hình minh họa: Tụ điện phẳng tích điện (+Q, -Q) và so sánh sơ đồ ghép nối tiếp vs ghép song song.",
+          svg: `<svg viewBox="0 0 560 165" role="img" aria-label="Tụ điện và cách ghép tụ">
+            <rect x="45" y="35" width="12" height="90" rx="2" fill="${C.err}"/>
+            <rect x="57" y="42" width="38" height="76" fill="${C.a}" opacity="0.28"/>
+            <rect x="95" y="35" width="12" height="90" rx="2" fill="${C.p}"/>
+            <text x="76" y="84" fill="${C.t}" font-size="10" font-weight="700" text-anchor="middle">Điện môi</text>
+            <text x="51" y="28" fill="${C.err}" font-size="11" font-weight="700" text-anchor="middle">+Q</text>
+            <text x="101" y="28" fill="${C.p}" font-size="11" font-weight="700" text-anchor="middle">-Q</text>
+            <g stroke="${C.t}" stroke-width="2.2">
+              <line x1="175" y1="55" x2="215" y2="55"/><line x1="215" y1="40" x2="215" y2="70"/><line x1="225" y1="40" x2="225" y2="70"/>
+              <line x1="225" y1="55" x2="275" y2="55"/><line x1="275" y1="40" x2="275" y2="70"/><line x1="285" y1="40" x2="285" y2="70"/><line x1="285" y1="55" x2="325" y2="55"/>
+            </g>
+            <text x="250" y="92" fill="${C.w}" font-size="11" font-weight="700" text-anchor="middle">Nối tiếp: 1/C = 1/C₁ + 1/C₂</text>
+            <g stroke="${C.t}" stroke-width="2.2" fill="none">
+              <line x1="375" y1="68" x2="405" y2="68"/><polyline points="405,40 405,96"/>
+              <line x1="405" y1="40" x2="440" y2="40"/><line x1="440" y1="28" x2="440" y2="52"/><line x1="450" y1="28" x2="450" y2="52"/><line x1="450" y1="40" x2="485" y2="40"/>
+              <line x1="405" y1="96" x2="440" y2="96"/><line x1="440" y1="84" x2="440" y2="108"/><line x1="450" y1="84" x2="450" y2="108"/><line x1="450" y1="96" x2="485" y2="96"/>
+              <polyline points="485,40 485,96"/><line x1="485" y1="68" x2="515" y2="68"/>
+            </g>
+            <text x="445" y="132" fill="${C.ok}" font-size="11" font-weight="700" text-anchor="middle">Song song: C = C₁ + C₂</text>
+          </svg>`
+        },
+        b22: {
+          cap: "Hình minh họa: Mô hình vi mô dòng điện trong kim loại — electron tự do trôi ngược chiều điện trường E và chiều dòng điện quy ước I.",
+          svg: `<svg viewBox="0 0 560 155" role="img" aria-label="Electron dịch chuyển trong dây dẫn kim loại">
+            <rect x="65" y="38" width="430" height="80" rx="18" fill="none" stroke="${C.p}" stroke-width="2.2"/>
+            <ellipse cx="280" cy="78" rx="16" ry="40" fill="${C.p}" opacity="0.16" stroke="${C.p}" stroke-dasharray="4 3"/>
+            <text x="280" y="134" fill="${C.p}" font-size="11" font-weight="700" text-anchor="middle">Tiết diện S</text>
+            <g fill="${C.err}" opacity="0.55">
+              <circle cx="120" cy="58" r="7"/><circle cx="200" cy="58" r="7"/><circle cx="360" cy="58" r="7"/><circle cx="440" cy="58" r="7"/>
+              <circle cx="120" cy="98" r="7"/><circle cx="200" cy="98" r="7"/><circle cx="360" cy="98" r="7"/><circle cx="440" cy="98" r="7"/>
+            </g>
+            <g class="anim-drift" fill="${C.p}">
+              <circle cx="160" cy="78" r="6"/><circle cx="240" cy="64" r="6"/><circle cx="320" cy="92" r="6"/><circle cx="400" cy="74" r="6"/>
+            </g>
+            <text x="155" y="25" fill="${C.w}" font-size="11.5" font-weight="700">Chiều dòng điện I & Điện trường E ⟶</text>
+            <text x="325" y="148" fill="${C.p}" font-size="11" font-weight="700">⟵ Chiều electron tự do (v)</text>
+          </svg>`
+        },
+        b23: {
+          cap: "Hình minh họa: Đường đặc trưng I–U của điện trở thuần (đường thẳng, độ dốc 1/R) và bóng đèn sợi đốt (cong xuống khi nóng lên).",
+          svg: `<svg viewBox="0 0 560 165" role="img" aria-label="Đường đặc trưng Vôn-Ampe">
+            <line x1="45" y1="140" x2="255" y2="140" stroke="${C.m}" stroke-width="1.5"/>
+            <line x1="55" y1="22" x2="55" y2="148" stroke="${C.m}" stroke-width="1.5"/>
+            <line x1="55" y1="140" x2="200" y2="30" stroke="${C.p}" stroke-width="2.6"/>
+            <line x1="55" y1="140" x2="240" y2="75" stroke="${C.a}" stroke-width="2.4"/>
+            <text x="195" y="26" fill="${C.p}" font-size="11" font-weight="700">R₁ (nhỏ hơn)</text>
+            <text x="200" y="72" fill="${C.a}" font-size="11" font-weight="700">R₂</text>
+            <text x="242" y="154" fill="${C.m}" font-size="10">U (V)</text>
+            <text x="35" y="28" fill="${C.m}" font-size="10">I</text>
+            <line x1="315" y1="140" x2="525" y2="140" stroke="${C.m}" stroke-width="1.5"/>
+            <line x1="325" y1="22" x2="325" y2="148" stroke="${C.m}" stroke-width="1.5"/>
+            <path d="M325 140 Q390 60 510 48" fill="none" stroke="${C.w}" stroke-width="3"/>
+            <text x="405" y="40" fill="${C.w}" font-size="11" font-weight="700">Đèn sợi đốt (R tăng theo t°)</text>
+            <text x="505" y="154" fill="${C.m}" font-size="10">U (V)</text>
+          </svg>`
+        },
+        b24: {
+          cap: "Hình minh họa: Mạch điện kín gồm nguồn điện (suất điện động E, điện trở trong r) nối với điện trở mạch ngoài R.",
+          svg: `<svg viewBox="0 0 560 165" role="img" aria-label="Sơ đồ mạch điện kín có nguồn điện">
+            <rect x="145" y="22" width="160" height="44" rx="8" fill="${C.a}" opacity="0.14" stroke="${C.a}" stroke-dasharray="5 3"/>
+            <g stroke="${C.t}" stroke-width="2.2" fill="none">
+              <line x1="90" y1="44" x2="185" y2="44"/><line x1="185" y1="30" x2="185" y2="58" stroke="${C.err}" stroke-width="3"/>
+              <line x1="196" y1="37" x2="196" y2="51" stroke="${C.p}" stroke-width="4"/><line x1="196" y1="44" x2="230" y2="44"/>
+              <rect x="230" y="34" width="46" height="20" rx="3" fill="var(--surface)" stroke="${C.w}"/>
+              <line x1="276" y1="44" x2="450" y2="44"/><line x1="450" y1="44" x2="450" y2="128"/>
+              <line x1="90" y1="44" x2="90" y2="128"/><line x1="90" y1="128" x2="220" y2="128"/>
+              <rect x="220" y="114" width="100" height="28" rx="4" fill="var(--surface)" stroke="${C.p}"/>
+              <line x1="320" y1="128" x2="450" y2="128"/>
+            </g>
+            <text x="180" y="18" fill="${C.a}" font-size="11" font-weight="700">Nguồn (E, r)</text>
+            <text x="253" y="48" fill="${C.w}" font-size="11" font-weight="700" text-anchor="middle">r</text>
+            <text x="270" y="132" fill="${C.p}" font-size="12" font-weight="700" text-anchor="middle">R ngoài</text>
+            <text x="370" y="36" fill="${C.ok}" font-size="11" font-weight="700">I = E / (R + r) ⟶</text>
+          </svg>`
+        },
+        b25: {
+          cap: "Hình minh họa: Hiệu suất phát sáng (LED 80% vs Sợi đốt 5%) và đường cong công suất mạch ngoài P(R) đạt cực đại tại R = r.",
+          svg: `<svg viewBox="0 0 560 165" role="img" aria-label="Hiệu suất đèn LED và cực trị công suất mạch ngoài">
+            <text x="35" y="34" fill="${C.t}" font-size="11" font-weight="700">Đèn sợi đốt (100W)</text>
+            <rect x="35" y="42" width="180" height="20" rx="4" fill="${C.err}" opacity="0.75"/>
+            <rect x="35" y="42" width="12" height="20" rx="4" fill="${C.w}"/>
+            <text x="35" y="76" fill="${C.m}" font-size="10">5% Sáng · 95% Nhiệt</text>
+            <text x="35" y="106" fill="${C.t}" font-size="11" font-weight="700">Đèn LED (20W)</text>
+            <rect x="35" y="114" width="180" height="20" rx="4" fill="${C.err}" opacity="0.45"/>
+            <rect x="35" y="114" width="144" height="20" rx="4" fill="${C.ok}"/>
+            <text x="35" y="148" fill="${C.ok}" font-size="10" font-weight="700">80% Sáng · 20% Nhiệt</text>
+            <line x1="275" y1="140" x2="530" y2="140" stroke="${C.m}" stroke-width="1.5"/>
+            <line x1="285" y1="22" x2="285" y2="148" stroke="${C.m}" stroke-width="1.5"/>
+            <path d="M285 140 Q340 28 365 36 T520 96" fill="none" stroke="${C.p}" stroke-width="3"/>
+            <line x1="360" y1="36" x2="360" y2="140" stroke="${C.w}" stroke-dasharray="4 3"/>
+            <text x="348" y="155" fill="${C.w}" font-size="11" font-weight="700">R = r</text>
+            <text x="372" y="40" fill="${C.w}" font-size="11" font-weight="700">Pmax = E²/4r</text>
+          </svg>`
+        },
+        b26: {
+          cap: "Hình minh họa: Đồ thị thực nghiệm U(I) = E − rI dùng để xác định suất điện động E và điện trở trong r của pin.",
+          svg: `<svg viewBox="0 0 560 160" role="img" aria-label="Đồ thị thực nghiệm U theo I đo suất điện động và điện trở trong">
+            <line x1="115" y1="132" x2="455" y2="132" stroke="${C.m}" stroke-width="1.6"/>
+            <line x1="130" y1="18" x2="130" y2="142" stroke="${C.m}" stroke-width="1.6"/>
+            <line x1="130" y1="34" x2="410" y2="132" stroke="${C.p}" stroke-width="3"/>
+            <circle cx="130" cy="34" r="5" fill="${C.w}"/>
+            <circle cx="220" cy="65" r="4.5" fill="${C.err}"/><circle cx="310" cy="97" r="4.5" fill="${C.err}"/>
+            <text x="88" y="38" fill="${C.w}" font-size="12" font-weight="700">U₀ = E</text>
+            <text x="415" y="148" fill="${C.m}" font-size="11">I (A)</text>
+            <text x="260" y="68" fill="${C.a}" font-size="11" font-weight="700">Độ dốc = −r = −|ΔU/ΔI|</text>
+          </svg>`
+        }
+      };
+      const item = diagrams[id];
+      if (!item) return "";
+      return `<figure class="viz-card">${item.svg}<figcaption class="viz-caption">${item.cap}</figcaption></figure>`;
+    }
+
+    function renderExampleVisual(lessonId, idx) {
+      const C = { p: "var(--primary)", a: "var(--accent)", w: "var(--adv-border)", t: "var(--text)", m: "var(--text-muted)", ok: "var(--ok-border)", err: "var(--warn-border)" };
+      const key = `${lessonId}_${idx}`;
+      // Bản vẽ tóm tắt trực quan riêng cho từng nhóm bài tập (phủ đủ toàn bộ 55 ví dụ)
+      const map = {
+        b1_2_0: `<svg viewBox="0 0 420 90"><rect x="40" y="24" width="180" height="42" rx="6" fill="none" stroke="${C.m}" stroke-width="2"/><rect x="115" y="27" width="26" height="36" rx="3" fill="${C.p}" class="anim-osc-x"/><line x1="60" y1="78" x2="200" y2="78" stroke="${C.w}" stroke-width="2"/><text x="130" y="88" fill="${C.w}" font-size="10.5" font-weight="700" text-anchor="middle">L = 2A = 16 cm → A = 8 cm</text><text x="245" y="48" fill="${C.t}" font-size="11">N = 300 dao động / 60 s</text><text x="245" y="66" fill="${C.ok}" font-size="11" font-weight="700">⇒ f = 5 Hz, T = 0,2 s</text></svg>`,
+        b1_2_1: `<svg viewBox="0 0 420 90"><circle cx="70" cy="45" r="32" fill="none" stroke="${C.p}" stroke-width="1.8"/><line x1="30" y1="45" x2="110" y2="45" stroke="${C.m}"/><line x1="70" y1="45" x2="54" y2="17" stroke="${C.w}" stroke-width="2.2"/><circle cx="54" cy="17" r="4.5" fill="${C.w}"/><text x="128" y="34" fill="${C.t}" font-size="11" font-weight="700">x = 5cos(10πt + π/6)</text><text x="128" y="54" fill="${C.m}" font-size="10.5">Tại t₁ = 0,05 s: Φ = 2π/3 rad</text><text x="128" y="72" fill="${C.p}" font-size="11" font-weight="700">⇒ x₁ = −2,5 cm</text></svg>`,
+        b1_2_2: `<svg viewBox="0 0 420 90"><circle cx="75" cy="45" r="32" fill="none" stroke="${C.m}" stroke-dasharray="3 2"/><line x1="75" y1="45" x2="103" y2="61" stroke="${C.p}" stroke-width="2.2"/><line x1="75" y1="45" x2="103" y2="29" stroke="${C.w}" stroke-width="2.2"/><text x="115" y="32" fill="${C.w}" font-size="10.5" font-weight="700">x₂ (φ₂ = +π/6)</text><text x="115" y="64" fill="${C.p}" font-size="10.5" font-weight="700">x₁ (φ₁ = -π/6)</text><text x="235" y="42" fill="${C.a}" font-size="11" font-weight="700">Δφ = π/3 rad</text><text x="235" y="62" fill="${C.m}" font-size="10.5">Δt = Δφ/ω = 1/12 s</text></svg>`,
+        b3_4_0: `<svg viewBox="0 0 420 88"><line x1="35" y1="48" x2="235" y2="48" stroke="${C.m}" stroke-width="2"/><circle cx="135" cy="48" r="6" fill="${C.p}"/><circle cx="220" cy="48" r="6" fill="${C.w}"/><text x="135" y="32" fill="${C.p}" font-size="10" font-weight="700" text-anchor="middle">VTCB: vmax = 40 cm/s</text><text x="220" y="72" fill="${C.w}" font-size="10" font-weight="700" text-anchor="middle">Biên: amax = 4 m/s²</text><text x="265" y="42" fill="${C.t}" font-size="11">ω = amax / vmax</text><text x="265" y="62" fill="${C.ok}" font-size="11" font-weight="700">A = vmax / ω = 4 cm</text></svg>`,
+        b3_4_1: `<svg viewBox="0 0 420 88"><line x1="35" y1="50" x2="225" y2="50" stroke="${C.m}" stroke-width="1.6"/><circle cx="190" cy="50" r="6" fill="${C.p}"/><line x1="190" y1="50" x2="145" y2="50" stroke="${C.err}" stroke-width="2.5"/><polygon points="142,50 151,46 151,54" fill="${C.err}"/><text x="165" y="38" fill="${C.err}" font-size="10" font-weight="700" text-anchor="middle">v &lt; 0, a &lt; 0</text><text x="245" y="42" fill="${C.t}" font-size="11">x = +3,46 cm</text><text x="245" y="62" fill="${C.m}" font-size="10.5">Về VTCB → Nhanh dần</text></svg>`,
+        b3_4_2: `<svg viewBox="0 0 420 90"><circle cx="75" cy="46" r="32" fill="none" stroke="${C.p}" stroke-width="2"/><path d="M59 18 A32 32 0 0 1 91 18" fill="none" stroke="${C.w}" stroke-width="4"/><line x1="59" y1="76" x2="91" y2="76" stroke="${C.w}" stroke-width="2.5"/><text x="75" y="88" fill="${C.w}" font-size="10" font-weight="700" text-anchor="middle">Smax = A (Δφ = π/3)</text><text x="140" y="38" fill="${C.t}" font-size="11">Elip (v, a) → ω = 10 rad/s</text><text x="140" y="60" fill="${C.ok}" font-size="11" font-weight="700">A = 5,0 cm ⇒ Smax = 5,0 cm</text></svg>`,
+        b5_7_0: `<svg viewBox="0 0 420 88"><line x1="25" y1="22" x2="25" y2="68" stroke="${C.t}" stroke-width="3"/><path d="M25 45 l12 -10 12 20 12 -20 12 20 12 -20 12 10" fill="none" stroke="${C.p}" stroke-width="2"/><rect x="97" y="31" width="30" height="28" rx="4" fill="${C.w}"/><text x="112" y="49" fill="#fff" font-size="10" font-weight="700" text-anchor="middle">m</text><text x="155" y="38" fill="${C.t}" font-size="11">k = 50 N/m, m = 0,5 kg</text><text x="155" y="58" fill="${C.ok}" font-size="11" font-weight="700">W = 0,04 J · Wt(-2cm) = 0,01 J</text></svg>`,
+        b5_7_1: `<svg viewBox="0 0 420 88"><rect x="30" y="34" width="160" height="22" rx="4" fill="${C.p}" opacity="0.25"/><rect x="30" y="34" width="120" height="22" rx="4" fill="${C.err}" opacity="0.8"/><text x="90" y="49" fill="#fff" font-size="10" font-weight="700" text-anchor="middle">Wđ = 3Wt (75%)</text><text x="170" y="49" fill="${C.t}" font-size="9.5" text-anchor="middle">Wt</text><text x="215" y="40" fill="${C.t}" font-size="11">|x| = A / 2 = 2,5 cm</text><text x="215" y="60" fill="${C.w}" font-size="11" font-weight="700">Δtmin = T/12 ≈ 0,0262 s</text></svg>`,
+        b5_7_2: `<svg viewBox="0 0 420 90"><line x1="55" y1="14" x2="105" y2="14" stroke="${C.t}" stroke-width="2.5"/><line x1="80" y1="14" x2="80" y2="78" stroke="${C.m}" stroke-dasharray="3 2"/><line x1="80" y1="14" x2="108" y2="70" stroke="${C.p}" stroke-width="2"/><circle cx="108" cy="70" r="8" fill="${C.w}"/><text x="145" y="36" fill="${C.t}" font-size="11">l = 1 m, α₀ = 0,1 rad</text><text x="145" y="56" fill="${C.a}" font-size="11">Wt = 3Wđ ⇒ Wđ = W/4</text><text x="145" y="74" fill="${C.ok}" font-size="11" font-weight="700">v ≈ 15,8 cm/s</text></svg>`,
+        b16_2: `<svg viewBox="0 0 420 88"><line x1="35" y1="45" x2="265" y2="45" stroke="${C.m}" stroke-dasharray="4 3"/><circle cx="55" cy="45" r="13" fill="${C.err}"/><text x="55" y="49" fill="#fff" font-size="10" font-weight="700" text-anchor="middle">+4</text><circle cx="135" cy="45" r="9" fill="${C.w}"/><text x="135" y="30" fill="${C.w}" font-size="10" font-weight="700" text-anchor="middle">q₃ (F=0)</text><circle cx="245" cy="45" r="14" fill="${C.err}"/><text x="245" y="49" fill="#fff" font-size="10" font-weight="700" text-anchor="middle">+9</text><text x="95" y="68" fill="${C.p}" font-size="10.5" font-weight="700" text-anchor="middle">x = 4 cm</text><text x="190" y="68" fill="${C.m}" font-size="10.5" text-anchor="middle">6 cm</text><text x="285" y="50" fill="${C.ok}" font-size="11" font-weight="700">Cùng dấu ⇒ Trong AB</text></svg>`,
+        b17_2: `<svg viewBox="0 0 420 96"><polygon points="65,78 65,24 145,78" fill="none" stroke="${C.m}" stroke-dasharray="3 3"/><circle cx="65" cy="24" r="6" fill="${C.err}"/><circle cx="145" cy="78" r="6" fill="${C.err}"/><line x1="65" y1="78" x2="65" y2="94" stroke="${C.p}" stroke-width="2.5"/><line x1="65" y1="78" x2="35" y2="78" stroke="${C.w}" stroke-width="2.5"/><text x="48" y="24" fill="${C.t}" font-size="10">B</text><text x="155" y="82" fill="${C.t}" font-size="10">C</text><text x="72" y="72" fill="${C.t}" font-size="10">A (90°)</text><text x="195" y="42" fill="${C.t}" font-size="11">E₁ ⊥ E₂ tại A</text><text x="195" y="64" fill="${C.ok}" font-size="11" font-weight="700">EA = √(E₁² + E₂²) ≈ 6,36·10⁵ V/m</text></svg>`,
+        b18_1: `<svg viewBox="0 0 420 90"><rect x="45" y="14" width="140" height="10" fill="${C.err}"/><rect x="45" y="72" width="140" height="10" fill="${C.p}"/><circle cx="115" cy="48" r="8" fill="${C.a}"/><line x1="115" y1="40" x2="115" y2="25" stroke="${C.ok}" stroke-width="2.5"/><line x1="115" y1="56" x2="115" y2="70" stroke="${C.w}" stroke-width="2.5"/><text x="130" y="34" fill="${C.ok}" font-size="10" font-weight="700">F ↑</text><text x="130" y="68" fill="${C.w}" font-size="10" font-weight="700">P ↓</text><text x="215" y="42" fill="${C.t}" font-size="11">Cân bằng: F = P (F ↑↓ E)</text><text x="215" y="62" fill="${C.ok}" font-size="11" font-weight="700">⇒ q = −5,0 nC</text></svg>`,
+        b24_1: `<svg viewBox="0 0 420 96"><g stroke="${C.t}" stroke-width="1.8" fill="none"><line x1="30" y1="48" x2="65" y2="48"/><rect x="65" y="38" width="44" height="20" fill="var(--surface)" stroke="${C.p}"/><line x1="109" y1="48" x2="140" y2="48"/><polyline points="140,26 140,70"/><line x1="140" y1="26" x2="165" y2="26"/><rect x="165" y="16" width="44" height="20" fill="var(--surface)" stroke="${C.w}"/><line x1="209" y1="26" x2="235" y2="26"/><line x1="140" y1="70" x2="165" y2="70"/><rect x="165" y="60" width="44" height="20" fill="var(--surface)" stroke="${C.a}"/><line x1="209" y1="70" x2="235" y2="70"/><polyline points="235,26 235,70"/><line x1="235" y1="48" x2="260" y2="48"/></g><text x="87" y="52" fill="${C.p}" font-size="9.5" font-weight="700" text-anchor="middle">R₁=3Ω</text><text x="187" y="30" fill="${C.w}" font-size="9.5" font-weight="700" text-anchor="middle">R₂=4Ω</text><text x="187" y="74" fill="${C.a}" font-size="9.5" font-weight="700" text-anchor="middle">R₃=6Ω</text><text x="275" y="42" fill="${C.t}" font-size="11">R_AB = 5,4 Ω</text><text x="275" y="62" fill="${C.ok}" font-size="11" font-weight="700">I = 2,0 A · U = 10,8 V</text></svg>`
+      };
+
+      if (map[key]) return `<div class="viz-ex-wrap">${map[key]}</div>`;
+
+      // Bộ mẫu SVG chuyên biệt theo từng chương cho các ví dụ còn lại để mọi bài tập đều có hình minh họa rõ ràng
+      const chGroup = lessonId.slice(0, 3);
+      if (lessonId === "b6") {
+        return `<div class="viz-ex-wrap"><svg viewBox="0 0 420 82"><line x1="25" y1="66" x2="195" y2="66" stroke="${C.m}"/><path d="M30 62 Q95 58 110 14 Q125 58 190 62" fill="none" stroke="${C.err}" stroke-width="2.4"/><line x1="110" y1="14" x2="110" y2="66" stroke="${C.w}" stroke-dasharray="3 2"/><text x="110" y="78" fill="${C.w}" font-size="10" font-weight="700" text-anchor="middle">f = f₀</text><text x="215" y="38" fill="${C.t}" font-size="11" font-weight="700">Sơ đồ cộng hưởng cơ</text><text x="215" y="58" fill="${C.m}" font-size="10.5">Biên độ cực đại khi f → f₀</text></svg></div>`;
+      }
+      if (lessonId === "b8_9_10") {
+        return `<div class="viz-ex-wrap"><svg viewBox="0 0 420 82"><line x1="20" y1="44" x2="215" y2="44" stroke="${C.m}" stroke-dasharray="3 2"/><path d="M25 44 Q50 12 75 44 T125 44 T175 44 T210 44" fill="none" stroke="${C.p}" stroke-width="2.4"/><circle cx="75" cy="44" r="4.5" fill="${C.w}"/><circle cx="175" cy="44" r="4.5" fill="${C.err}"/><line x1="75" y1="18" x2="175" y2="18" stroke="${C.w}" stroke-width="1.6"/><text x="125" y="13" fill="${C.w}" font-size="10" font-weight="700" text-anchor="middle">λ = v / f</text><text x="235" y="38" fill="${C.t}" font-size="11" font-weight="700">Mặt cắt sóng hình sin</text><text x="235" y="56" fill="${C.m}" font-size="10.5">Δφ = 2πd / λ</text></svg></div>`;
+      }
+      if (lessonId === "b11") {
+        return `<div class="viz-ex-wrap"><svg viewBox="0 0 420 82"><circle cx="65" cy="54" r="22" fill="${C.p}" opacity="0.25" stroke="${C.p}" stroke-width="1.8"/><circle cx="155" cy="24" r="7" fill="${C.w}"/><line x1="84" y1="45" x2="148" y2="26" stroke="${C.err}" stroke-width="2" stroke-dasharray="4 2"/><text x="65" y="58" fill="${C.t}" font-size="9.5" font-weight="700" text-anchor="middle">Trái Đất</text><text x="155" y="13" fill="${C.w}" font-size="9.5" font-weight="700" text-anchor="middle">Vệ tinh / Anten</text><text x="210" y="38" fill="${C.t}" font-size="11" font-weight="700">Sóng điện từ (c = 3·10⁸ m/s)</text><text x="210" y="58" fill="${C.ok}" font-size="10.5">λ = c / f · t = s / c</text></svg></div>`;
+      }
+      if (lessonId === "b12_14") {
+        return `<div class="viz-ex-wrap"><svg viewBox="0 0 420 82"><circle cx="48" cy="26" r="5" fill="${C.err}"/><circle cx="48" cy="58" r="5" fill="${C.err}"/><line x1="48" y1="26" x2="170" y2="34" stroke="${C.p}" stroke-width="1.6"/><line x1="48" y1="58" x2="170" y2="34" stroke="${C.p}" stroke-width="1.6"/><line x1="170" y1="12" x2="170" y2="72" stroke="${C.t}" stroke-width="2.5"/><circle cx="170" cy="34" r="4" fill="${C.w}"/><text x="200" y="36" fill="${C.t}" font-size="11" font-weight="700">Giao thoa 2 nguồn kết hợp</text><text x="200" y="56" fill="${C.w}" font-size="10.5">i = λD/a · Δd = kλ (CĐ)</text></svg></div>`;
+      }
+      if (lessonId === "b13_15") {
+        return `<div class="viz-ex-wrap"><svg viewBox="0 0 420 82"><path d="M25 44 Q65 10 105 44 T185 44" fill="none" stroke="${C.p}" stroke-width="2.4"/><path d="M25 44 Q65 78 105 44 T185 44" fill="none" stroke="${C.a}" stroke-width="1.8" stroke-dasharray="4 2"/><circle cx="25" cy="44" r="4" fill="${C.w}"/><circle cx="105" cy="44" r="4" fill="${C.w}"/><circle cx="185" cy="44" r="4" fill="${C.w}"/><text x="210" y="36" fill="${C.t}" font-size="11" font-weight="700">Sơ đồ bó sóng dừng</text><text x="210" y="56" fill="${C.ok}" font-size="10.5">Nút–Nút = λ/2 · v = λf</text></svg></div>`;
+      }
+      if (lessonId === "b16" || lessonId === "b17" || lessonId === "b18" || lessonId === "b19_20") {
+        return `<div class="viz-ex-wrap"><svg viewBox="0 0 420 82"><g stroke="${C.p}" stroke-width="1.3" opacity="0.65"><line x1="30" y1="22" x2="180" y2="22"/><line x1="30" y1="42" x2="180" y2="42"/><line x1="30" y1="62" x2="180" y2="62"/></g><circle cx="70" cy="42" r="9" fill="${C.err}"/><text x="70" y="46" fill="#fff" font-size="10" font-weight="700" text-anchor="middle">q</text><line x1="80" y1="42" x2="135" y2="42" stroke="${C.w}" stroke-width="2.6"/><polygon points="138,42 128,37 128,47" fill="${C.w}"/><text x="200" y="36" fill="${C.t}" font-size="11" font-weight="700">Tương tác tĩnh điện & Điện thế</text><text x="200" y="56" fill="${C.p}" font-size="10.5">F = qE · E = U/d · A = qU</text></svg></div>`;
+      }
+      if (lessonId === "b21") {
+        return `<div class="viz-ex-wrap"><svg viewBox="0 0 420 82"><g stroke="${C.t}" stroke-width="2.2"><line x1="35" y1="42" x2="80" y2="42"/><line x1="80" y1="22" x2="80" y2="62" stroke="${C.err}"/><line x1="94" y1="22" x2="94" y2="62" stroke="${C.p}"/><line x1="94" y1="42" x2="145" y2="42"/></g><text x="87" y="16" fill="${C.w}" font-size="10.5" font-weight="700" text-anchor="middle">C (Q = CU)</text><text x="170" y="38" fill="${C.t}" font-size="11" font-weight="700">Tích trữ năng lượng tụ điện</text><text x="170" y="58" fill="${C.ok}" font-size="10.5">W = ½CU² = ½Q²/C</text></svg></div>`;
+      }
+      // Chương 4 (b22, b23, b24, b25, b26)
+      return `<div class="viz-ex-wrap"><svg viewBox="0 0 420 82"><rect x="35" y="20" width="135" height="44" rx="6" fill="none" stroke="${C.t}" stroke-width="1.8"/><line x1="78" y1="12" x2="78" y2="28" stroke="${C.err}" stroke-width="3"/><line x1="86" y1="16" x2="86" y2="24" stroke="${C.p}" stroke-width="3.5"/><rect x="76" y="54" width="52" height="18" rx="3" fill="var(--surface)" stroke="${C.w}" stroke-width="2"/><text x="102" y="67" fill="${C.w}" font-size="10" font-weight="700" text-anchor="middle">R</text><text x="192" y="36" fill="${C.t}" font-size="11" font-weight="700">Sơ đồ mạch điện & Công suất</text><text x="192" y="56" fill="${C.p}" font-size="10.5">I = E/(R+r) · U = E−Ir · P = UI</text></svg></div>`;
+    }
+
+    function renderChapters() {
+      const wrap = document.getElementById("chaptersContainer");
+      const toc = document.getElementById("tocList");
+      const fSelect = document.getElementById("formulaChapterSelect");
+
+      PHYSICS_DATA.chapters.forEach((ch, idx) => {
+        // Mục lục sidebar phân cấp Chương -> Bài
+        const li = document.createElement("li");
+        li.className = "toc-group";
+        li.innerHTML = `
+          <a href="#${ch.id}" class="toc-ch-head toc-link ${idx === 0 ? "active" : ""}" data-ch="${ch.id}">${ch.short}</a>
+          <ul class="toc-sublist">
+            ${ch.lessons.map(ls => `<li><a href="#${ls.id}" class="toc-sublink" data-ch="${ch.id}" data-ls="${ls.id}">${ls.short}</a></li>`).join("")}
+          </ul>
+        `;
+        toc.appendChild(li);
+
+        // Bộ lọc bảng công thức
+        const opt = document.createElement("option");
+        opt.value = ch.id;
+        opt.textContent = ch.short;
+        fSelect.appendChild(opt);
+
+        const totalFormulas = ch.lessons.reduce((s, l) => s + l.formulas.length, 0);
+        const totalExamples = ch.lessons.reduce((s, l) => s + l.examples.length, 0);
+
+        const card = document.createElement("article");
+        card.className = "glass-card chapter-card" + (idx === 0 ? " open" : "");
+        card.id = ch.id;
+        card.innerHTML = `
+          <button class="chapter-header" type="button" aria-expanded="${idx === 0}">
+            <div>
+              <div class="chapter-title">${ch.title}</div>
+              <div class="chapter-meta">${ch.lessons.length} cụm bài riêng biệt · ${totalFormulas} công thức · ${totalExamples} ví dụ giải chi tiết</div>
+            </div>
+            <span class="chevron" aria-hidden="true">▼</span>
+          </button>
+          <div class="chapter-body">
+            <div class="sec-h">A1. Ý chính toàn chương</div>
+            <div class="idea-box">${ch.idea}</div>
+
+            <div class="lessons-stack">
+              ${ch.lessons.map((ls, lIdx) => {
+                const basicF = ls.formulas.filter(f => f.level === "basic");
+                const advF = ls.formulas.filter(f => f.level === "advanced");
+                const openFirst = idx === 0 && lIdx === 0;
+                return `
+                  <section class="lesson-card ${openFirst ? "open" : ""}" id="${ls.id}">
+                    <button class="lesson-header" type="button" aria-expanded="${openFirst}">
+                      <div>
+                        <div class="lesson-title">${ls.title}</div>
+                        <div class="lesson-meta">${ls.concepts.length} khái niệm · ${ls.formulas.length} công thức · ${ls.examples.length} ví dụ</div>
+                      </div>
+                      <span class="lesson-chevron" aria-hidden="true">▼</span>
+                    </button>
+                    <div class="lesson-body">
+                      ${renderLessonVisual(ls.id)}
+                      <div class="sec-h">Khái niệm & định nghĩa then chốt</div>
+                      <div class="concept-grid">
+                        ${ls.concepts.map(c => `
+                          <div class="concept-card searchable">
+                            <div class="concept-head">
+                              <span class="concept-name">${c.name}</span>
+                              <span class="badge b-cyan">Kí hiệu: ${c.sym}</span>
+                              <span class="badge b-level">SI: ${c.unit}</span>
+                              <span class="badge b-violet">${c.vec} · ${c.dim}</span>
+                            </div>
+                            <div class="concept-meta">
+                              <div><strong>Định nghĩa:</strong> ${c.def}</div>
+                              <div><strong>Ý nghĩa vật lí:</strong> ${c.meaning}</div>
+                              <div><strong>Hiểu bằng đời thường:</strong> ${c.analogy}</div>
+                              <div><strong>Dễ nhầm với:</strong> ${c.confuse}</div>
+                              <div><strong>Ví dụ nhanh:</strong> ${c.quick}</div>
+                            </div>
+                          </div>
+                        `).join("")}
+                      </div>
+
+                      ${basicF.length ? `<div class="sec-h">Công thức trong sách (Cơ bản)</div>${basicF.map(renderFormulaCard).join("")}` : ""}
+                      ${advF.length ? `<div class="sec-h">Công thức nâng cao / mở rộng</div>${advF.map(renderFormulaCard).join("")}` : ""}
+
+                      <div class="sec-h">Ví dụ minh họa</div>
+                      ${ls.examples.map((ex, i) => `
+                        <div class="example-card searchable">
+                          <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+                            <strong>Ví dụ ${i + 1}</strong>
+                            <span class="badge ${ex.level.includes("cao") ? "b-adv" : "b-cyan"}">${ex.level}</span>
+                          </div>
+                          <div style="margin-bottom:10px;">${ex.q}</div>
+                          ${renderExampleVisual(ls.id, i)}
+                          <button class="btn-primary toggle-sol-btn" type="button">👁️ Xem lời giải</button>
+                          <div class="example-sol">${ex.sol}</div>
+                        </div>
+                      `).join("")}
+                    </div>
+                  </section>
+                `;
+              }).join("")}
+            </div>
+
+            <div class="sec-h">A6. Lỗi thường gặp & Mẹo nhớ cả chương</div>
+            <div class="warn-box">
+              <ul>${ch.errors.map(e => `<li>${e}</li>`).join("")}</ul>
+            </div>
+
+            <div class="summary-box">💡 A7. Tóm lại: ${ch.summary}</div>
+          </div>
+        `;
+        wrap.appendChild(card);
+      });
+    }
+
+    function renderFormulaCard(f) {
+      const isAdv = f.level === "advanced";
+      const safeRaw = f.raw.replace(/"/g, "&quot;");
+      return `
+        <div class="formula-card searchable ${isAdv ? "advanced" : ""}">
+          <div class="formula-top">
+            <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+              <span class="formula-name">${f.name}</span>
+              <span class="badge ${isAdv ? "b-adv" : "b-cyan"}">${isAdv ? "Nâng cao" : "Cơ bản"}</span>
+              ${f.sup ? `<span class="badge b-violet">Bổ sung</span>` : ""}
+            </div>
+            <button class="copy-btn" type="button" data-latex="${safeRaw}" aria-label="Sao chép mã LaTeX">📋 Sao chép LaTeX</button>
+          </div>
+          <div class="formula-math">$$${f.raw}$$</div>
+          <div class="formula-details">
+            <div><strong>Đơn vị kết quả:</strong> ${f.unit} &nbsp;|&nbsp; <strong>Thứ nguyên:</strong> ${f.dim}</div>
+            <div><strong>Điều kiện & ghi chú:</strong> ${f.cond}</div>
+          </div>
+        </div>
+      `;
+    }
+
+    /* B4. Render Bảng Công Thức */
+    let formulaLevel = "all";
+    function renderFormulaTable() {
+      const chVal = document.getElementById("formulaChapterSelect").value;
+      const q = document.getElementById("searchInput").value.trim().toLowerCase();
+      const rows = [];
+
+      PHYSICS_DATA.chapters.forEach(ch => {
+        if (chVal !== "all" && ch.id !== chVal) return;
+        ch.lessons.forEach(ls => {
+          ls.formulas.forEach(f => {
+            if (formulaLevel !== "all" && f.level !== formulaLevel) return;
+            const hay = (ch.short + " " + ls.short + " " + f.name + " " + f.cond + " " + f.unit).toLowerCase();
+            if (q && !hay.includes(q)) return;
+            rows.push(`
+              <tr>
+                <td><strong>${ch.short}</strong><div style="font-size:0.75rem;color:var(--text-muted);">${ls.short}</div></td>
+                <td>${f.name} ${f.sup ? '<span class="badge b-violet">Bổ sung</span>' : ''}</td>
+                <td>$${f.raw}$</td>
+                <td>${f.unit}</td>
+                <td>${f.cond}</td>
+                <td><span class="badge ${f.level === "advanced" ? "b-adv" : "b-cyan"}">${f.level === "advanced" ? "Nâng cao" : "Cơ bản"}</span></td>
+              </tr>
+            `);
+          });
+        });
+      });
+
+      const wrap = document.getElementById("formulaTableWrap");
+      wrap.innerHTML = rows.length ? `
+        <table class="data-table">
+          <thead><tr><th>Chương</th><th>Tên công thức</th><th>Biểu thức</th><th>Đơn vị</th><th>Điều kiện áp dụng</th><th>Mức độ</th></tr></thead>
+          <tbody>${rows.join("")}</tbody>
+        </table>
+      ` : `<p style="color:var(--text-muted);padding:12px;">Không có công thức phù hợp bộ lọc.</p>`;
+      renderMathSafe(wrap);
+    }
+
+    /* B5. Render Bảng Đơn Vị & Hằng Số + Bộ đổi đơn vị */
+    function renderUnitsAndConstants() {
+      document.getElementById("quantitiesTableWrap").innerHTML = `
+        <table class="data-table">
+          <thead><tr><th>Đại lượng</th><th>Ký hiệu</th><th>Đơn vị SI</th><th>Thứ nguyên</th></tr></thead>
+          <tbody>${PHYSICS_DATA.quantities.map(q => `<tr><td>${q.name}</td><td><strong>${q.sym}</strong></td><td>${q.unit}</td><td><code>${q.dim}</code></td></tr>`).join("")}</tbody>
+        </table>
+      `;
+      document.getElementById("constantsTableWrap").innerHTML = `
+        <table class="data-table">
+          <thead><tr><th>Hằng số / Tiền tố</th><th>Ký hiệu</th><th>Giá trị chuẩn</th></tr></thead>
+          <tbody>${PHYSICS_DATA.constants.map(c => `<tr><td>${c.name}</td><td><strong>${c.sym}</strong></td><td>${c.val}</td></tr>`).join("")}</tbody>
+        </table>
+      `;
+
+      const updateConv = () => {
+        const val = parseFloat(document.getElementById("convVal").value);
+        const type = document.getElementById("convType").value;
+        const out = document.getElementById("convOut");
+        if (isNaN(val)) { out.textContent = "= —"; return; }
+        const map = {
+          cm_m: [val * 1e-2, "m"], mm_m: [val * 1e-3, "m"], um_m: [val * 1e-6, "m"],
+          nm_m: [val * 1e-9, "m"], mm2_m2: [val * 1e-6, "m²"],
+          deg_rad: [val * Math.PI / 180, "rad"], rad_deg: [val * 180 / Math.PI, "°"],
+          uC_C: [val * 1e-6, "C"], nC_C: [val * 1e-9, "C"],
+          uF_F: [val * 1e-6, "F"], pF_F: [val * 1e-12, "F"],
+          mA_A: [val * 1e-3, "A"], kmh_ms: [val / 3.6, "m/s"], kwh_j: [val * 3.6e6, "J"]
+        };
+        const [res, unit] = map[type];
+        const fmt = (Math.abs(res) < 1e-3 || Math.abs(res) >= 1e5) && res !== 0 ? res.toExponential(3) : Number(res.toPrecision(5));
+        out.textContent = `= ${fmt} ${unit}`;
+      };
+      document.getElementById("convVal").addEventListener("input", updateConv);
+      document.getElementById("convType").addEventListener("change", updateConv);
+      updateConv();
+    }
+
+    /* B6. Trắc nghiệm tương tác (chấm ngay, trộn câu, xem câu sai) */
+    let activeQuiz = [];
+    let userAnswers = {};
+    let onlyWrongMode = false;
+
+    function loadQuiz(shuffle = false) {
+      const filter = document.getElementById("quizFilter").value;
+      let list = PHYSICS_DATA.quiz.map((q, idx) => ({ ...q, uid: idx }));
+      if (filter !== "all") list = list.filter(q => q.cat === filter);
+      if (shuffle) list.sort(() => Math.random() - 0.5);
+      activeQuiz = list;
+      onlyWrongMode = false;
+      renderQuizList();
+    }
+
+    function renderQuizList() {
+      const wrap = document.getElementById("quizContainer");
+      const shown = onlyWrongMode
+        ? activeQuiz.filter(q => userAnswers[q.uid] !== undefined && userAnswers[q.uid] !== q.ans)
+        : activeQuiz;
+
+      wrap.innerHTML = shown.length ? shown.map((item, idx) => {
+        const picked = userAnswers[item.uid];
+        const answered = picked !== undefined;
+        return `
+          <div class="glass-card quiz-item">
+            <div style="display:flex;justify-content:space-between;gap:8px;margin-bottom:6px;">
+              <span class="badge b-cyan">Câu ${idx + 1}</span>
+              <span class="badge ${item.lvl.includes("cao") ? "b-adv" : "b-level"}">${item.lvl}</span>
+            </div>
+            <div class="quiz-q">${item.q}</div>
+            <div class="quiz-opts">
+              ${item.opts.map((opt, oIdx) => {
+                let cls = "quiz-opt";
+                if (answered) {
+                  if (oIdx === item.ans) cls += " correct";
+                  else if (oIdx === picked) cls += " wrong";
+                }
+                return `<button type="button" class="${cls}" data-uid="${item.uid}" data-opt="${oIdx}" ${answered ? "disabled" : ""}>${String.fromCharCode(65 + oIdx)}. ${opt}</button>`;
+              }).join("")}
+            </div>
+            <div class="quiz-exp ${answered ? "show" : ""}"><strong>Giải thích:</strong> ${item.exp}</div>
+          </div>
+        `;
+      }).join("") : `<div class="glass-card quiz-item" style="color:var(--text-muted);">${onlyWrongMode ? "🎉 Bạn chưa có câu làm sai nào!" : "Không có câu hỏi phù hợp."}</div>`;
+
+      // Gắn sự kiện chọn đáp án (chấm điểm ngay)
+      wrap.querySelectorAll(".quiz-opt").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const uid = Number(btn.dataset.uid);
+          const opt = Number(btn.dataset.opt);
+          userAnswers[uid] = opt;
+          renderQuizList();
+        });
+      });
+
+      // Cập nhật điểm số
+      let correctCount = 0;
+      let answeredCount = 0;
+      activeQuiz.forEach(q => {
+        if (userAnswers[q.uid] !== undefined) {
+          answeredCount++;
+          if (userAnswers[q.uid] === q.ans) correctCount++;
+        }
+      });
+      document.getElementById("quizScore").textContent = `Điểm: ${correctCount}/${activeQuiz.length} (đã làm ${answeredCount})`;
+      renderMathSafe(wrap);
+    }
+
+    // Hàm sao chép văn bản an toàn trong cả iframe
+    function copyTextSafe(text) {
+      const ta = document.createElement("textarea");
+      ta.value = text;
+      ta.style.position = "fixed";
+      ta.style.opacity = "0";
+      document.body.appendChild(ta);
+      ta.select();
+      try { document.execCommand("copy"); } catch (_) {}
+      document.body.removeChild(ta);
+    }
+
+    /* =====================================================================
+       SỰ KIỆN TƯƠNG TÁC CHUNG (ACCORDION, SEARCH, SCROLL-SPY, THEME)
+       ===================================================================== */
+    function bindGlobalEvents() {
+      const sidebar = document.getElementById("sidebar");
+      const overlay = document.getElementById("overlay");
+      const closeMobileMenu = () => {
+        sidebar.classList.remove("open");
+        overlay.classList.remove("show");
+      };
+
+      // Mở/đóng accordion Chương và Bài + re-render KaTeX
+      document.querySelectorAll(".chapter-header").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const card = btn.parentElement;
+          const isOpen = card.classList.toggle("open");
+          btn.setAttribute("aria-expanded", String(isOpen));
+          if (isOpen) renderMathSafe(card);
+        });
+      });
+
+      document.querySelectorAll(".lesson-header").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const lsCard = btn.parentElement;
+          const isOpen = lsCard.classList.toggle("open");
+          btn.setAttribute("aria-expanded", String(isOpen));
+          if (isOpen) renderMathSafe(lsCard);
+        });
+      });
+
+      document.getElementById("expandAllBtn").addEventListener("click", () => {
+        document.querySelectorAll(".chapter-card, .lesson-card").forEach(c => {
+          c.classList.add("open");
+          const h = c.querySelector(".chapter-header, .lesson-header");
+          if (h) h.setAttribute("aria-expanded", "true");
+        });
+        renderMathSafe(document.getElementById("chaptersContainer"));
+      });
+
+      document.getElementById("collapseAllBtn").addEventListener("click", () => {
+        document.querySelectorAll(".chapter-card, .lesson-card").forEach(c => {
+          c.classList.remove("open");
+          const h = c.querySelector(".chapter-header, .lesson-header");
+          if (h) h.setAttribute("aria-expanded", "false");
+        });
+      });
+
+      // Ẩn/hiện lời giải ví dụ & Sao chép LaTeX
+      document.getElementById("chaptersContainer").addEventListener("click", (e) => {
+        if (e.target.classList.contains("toggle-sol-btn")) {
+          const sol = e.target.nextElementSibling;
+          const show = sol.classList.toggle("show");
+          e.target.textContent = show ? "🙈 Ẩn lời giải" : "👁️ Xem lời giải";
+          if (show) renderMathSafe(sol);
+        }
+        if (e.target.classList.contains("copy-btn")) {
+          const tex = e.target.dataset.latex;
+          copyTextSafe(tex);
+          const orig = e.target.textContent;
+          e.target.textContent = "✅ Đã sao chép!";
+          setTimeout(() => { e.target.textContent = orig; }, 1400);
+        }
+      });
+
+      // Chuyển đổi giữa 4 tab chính
+      const navTabs = document.querySelectorAll(".nav-tab");
+      navTabs.forEach(tab => {
+        tab.addEventListener("click", () => {
+          navTabs.forEach(t => t.classList.remove("active"));
+          tab.classList.add("active");
+          document.querySelectorAll(".view-section").forEach(v => v.classList.remove("active"));
+          const targetView = document.getElementById("view-" + tab.dataset.view);
+          if (targetView) {
+            targetView.classList.add("active");
+            renderMathSafe(targetView);
+          }
+          closeMobileMenu();
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        });
+      });
+
+      // Click mục lục sidebar (Chương hoặc Bài con)
+      document.querySelectorAll(".toc-link").forEach(link => {
+        link.addEventListener("click", (e) => {
+          e.preventDefault();
+          document.querySelector('.nav-tab[data-view="chapters"]').click();
+          const el = document.getElementById(link.dataset.ch);
+          if (el) {
+            el.classList.add("open");
+            renderMathSafe(el);
+            setTimeout(() => el.scrollIntoView({ behavior: "smooth", block: "start" }), 60);
+          }
+        });
+      });
+
+      document.querySelectorAll(".toc-sublink").forEach(link => {
+        link.addEventListener("click", (e) => {
+          e.preventDefault();
+          document.querySelector('.nav-tab[data-view="chapters"]').click();
+          const chEl = document.getElementById(link.dataset.ch);
+          const lsEl = document.getElementById(link.dataset.ls);
+          if (chEl) chEl.classList.add("open");
+          if (lsEl) {
+            lsEl.classList.add("open");
+            renderMathSafe(lsEl);
+            setTimeout(() => lsEl.scrollIntoView({ behavior: "smooth", block: "start" }), 60);
+          }
+        });
+      });
+
+      // Tìm kiếm thời gian thực theo từng Bài
+      document.getElementById("searchInput").addEventListener("input", (e) => {
+        const q = e.target.value.trim().toLowerCase();
+        let hits = 0;
+        document.querySelectorAll(".chapter-card").forEach(card => {
+          let chHit = false;
+          card.querySelectorAll(".lesson-card").forEach(lsCard => {
+            let lsHit = false;
+            lsCard.querySelectorAll(".searchable").forEach(item => {
+              const match = !q || item.textContent.toLowerCase().includes(q);
+              item.style.display = match ? "" : "none";
+              if (q && match) { lsHit = true; chHit = true; hits++; }
+            });
+            if (q) {
+              lsCard.style.display = lsHit ? "" : "none";
+              if (lsHit) lsCard.classList.add("open");
+            } else {
+              lsCard.style.display = "";
+            }
+          });
+          if (q) {
+            card.style.display = chHit ? "" : "none";
+            if (chHit) card.classList.add("open");
+          } else {
+            card.style.display = "";
+          }
+        });
+        document.getElementById("searchStatus").textContent = q ? `Tìm thấy ${hits} mục khớp từ khóa "${e.target.value.trim()}"` : "";
+        renderFormulaTable();
+      });
+
+      // Bộ lọc Bảng công thức & In
+      document.getElementById("formulaChapterSelect").addEventListener("change", renderFormulaTable);
+      document.querySelectorAll(".pill[data-flevel]").forEach(btn => {
+        btn.addEventListener("click", () => {
+          document.querySelectorAll(".pill[data-flevel]").forEach(b => b.classList.remove("active"));
+          btn.classList.add("active");
+          formulaLevel = btn.dataset.flevel;
+          renderFormulaTable();
+        });
+      });
+      document.getElementById("printFormulasBtn").addEventListener("click", () => window.print());
+
+      // Bộ điều khiển Quiz
+      document.getElementById("quizFilter").addEventListener("change", () => loadQuiz(false));
+      document.getElementById("shuffleQuizBtn").addEventListener("click", () => loadQuiz(true));
+      document.getElementById("reviewWrongBtn").addEventListener("click", () => { onlyWrongMode = !onlyWrongMode; renderQuizList(); });
+      document.getElementById("resetQuizBtn").addEventListener("click", () => { userAnswers = {}; onlyWrongMode = false; renderQuizList(); });
+
+      // Chế độ Sáng / Tối (bọc try/catch khi dùng localStorage)
+      const applyTheme = (theme) => {
+        document.documentElement.setAttribute("data-theme", theme);
+        const icon = theme === "dark" ? "☀️" : "🌙";
+        document.getElementById("desktopThemeBtn").textContent = icon;
+        document.getElementById("mobileThemeBtn").textContent = icon;
+        try { localStorage.setItem("physica11_theme", theme); } catch (_) {}
+        if (window._redrawCanvas) window._redrawCanvas();
+      };
+      const toggleTheme = () => {
+        const cur = document.documentElement.getAttribute("data-theme");
+        applyTheme(cur === "dark" ? "light" : "dark");
+      };
+      document.getElementById("desktopThemeBtn").addEventListener("click", toggleTheme);
+      document.getElementById("mobileThemeBtn").addEventListener("click", toggleTheme);
+      try {
+        const saved = localStorage.getItem("physica11_theme");
+        if (saved === "light" || saved === "dark") applyTheme(saved);
+      } catch (_) {}
+
+      // Menu mobile
+      document.getElementById("openMenuBtn").addEventListener("click", () => {
+        sidebar.classList.add("open"); overlay.classList.add("show");
+      });
+      overlay.addEventListener("click", closeMobileMenu);
+
+      // Thanh tiến độ đọc, Nút lên đầu trang & Scroll-spy
+      const topBtn = document.getElementById("topBtn");
+      topBtn.addEventListener("click", () => window.scrollTo({ top: 0, behavior: "smooth" }));
+      window.addEventListener("scroll", () => {
+        const doc = document.documentElement;
+        const pct = (doc.scrollTop / (doc.scrollHeight - doc.clientHeight || 1)) * 100;
+        document.getElementById("progress-bar").style.width = pct + "%";
+        topBtn.style.display = doc.scrollTop > 320 ? "block" : "none";
+
+        // Scroll-spy làm nổi mục đang đọc
+        let currentId = "ch1";
+        document.querySelectorAll(".chapter-card").forEach(card => {
+          const rect = card.getBoundingClientRect();
+          if (rect.top <= 140) currentId = card.id;
+        });
+        document.querySelectorAll(".toc-link").forEach(a => {
+          a.classList.toggle("active", a.dataset.ch === currentId);
+        });
+      });
+    }
+
+    window.addEventListener("DOMContentLoaded", () => {
+      renderChapters();
+      renderFormulaTable();
+      renderUnitsAndConstants();
+      loadQuiz(false);
+      bindGlobalEvents();
+      window.addEventListener("load", () => renderMathSafe());
+    });
+  </script>
+</body>
+</html>
